@@ -1,24 +1,17 @@
-# build output
-dist/
-
-# generated types
-.astro/
-
-# dependencies
-node_modules/
+# Generated template dirs are committed, but their build artifacts are not.
+**/node_modules/
+**/.astro/
+**/dist/
+**/.husky/_/
 
 # logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+**/npm-debug.log*
+**/pnpm-debug.log*
 
-# environment variables
-.env
-.env.production
+# env
+**/.env
+**/.env.production
 
-# macOS-specific files
+# OS / editor
 .DS_Store
-
-# jetbrains setting folder
 .idea/

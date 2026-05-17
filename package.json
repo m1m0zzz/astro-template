@@ -1,44 +1,10 @@
 {
-  "name": "TODO",
-  "type": "module",
-  "version": "0.0.1",
-  "engines": {
-    "node": ">=22.12.0"
-  },
+  "name": "astro-template-builder",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Builder for the Astro templates. Edit files under builder/, then run npm run sync.",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro check && astro build",
-    "preview": "astro preview",
-    "astro": "astro",
-    "lint": "eslint --fix .",
-    "format": "prettier --write .",
-    "check": "npm run lint && npm run format",
-    "prepare": "husky"
-  },
-  "dependencies": {
-    "@astrojs/check": "^0.9.8",
-    "@astrojs/sitemap": "^3.7.2",
-    "@lucide/astro": "^1.0.0",
-    "@tailwindcss/vite": "^4.1.18",
-    "astro": "^6.3.3",
-    "tailwindcss": "^4.1.18",
-    "typescript": "^5.9.3"
-  },
-  "devDependencies": {
-    "@typescript-eslint/parser": "8.59.2",
-    "eslint": "9.39.4",
-    "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-astro": "1.7.0",
-    "eslint-plugin-jsx-a11y": "6.10.2",
-    "husky": "9.1.7",
-    "lint-staged": "16.4.0",
-    "prettier": "3.8.3",
-    "prettier-plugin-astro": "0.14.1"
-  },
-  "lint-staged": {
-    "**/*.{ts,tsx,js,jsx,md,json,astro,css}": [
-      "eslint --fix",
-      "prettier --write"
-    ]
+    "sync": "node scripts/sync-templates.mjs",
+    "sync:watch": "node scripts/sync-templates.mjs --watch"
   }
 }

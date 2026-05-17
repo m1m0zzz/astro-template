@@ -1,0 +1,46 @@
+---
+import Layout from "@/layouts/Layout.astro"
+
+import { ExternalLink } from "@lucide/astro"
+import astroLogo from "../assets/astro.svg"
+---
+
+<Layout>
+  <div
+    class="text-foreground bg-background grid grid-rows-[auto_1fr_auto] min-h-full"
+  >
+    <nav class="flex justify-between items-center h-15 px-4 bg-neutral-200">
+      <div>
+        <a href="/"
+          ><img
+            src={astroLogo.src}
+            width="115"
+            height="48"
+            alt="Astro Homepage"
+          /></a
+        >
+      </div>
+      <a
+        href="https://github.com/"
+        target="_blank"
+        class="flex justify-center items-center gap-1"
+      >
+        <span> GitHub </span>
+        <ExternalLink class="inline-block size-4" />
+      </a>
+    </nav>
+    <main class="w-full max-w-5xl mx-auto p-4">
+      <section id="hero">
+        <h1>
+          To get started, open the <code><pre>src/pages</pre></code> directory in
+          your project.
+        </h1>
+      </section>
+    </main>
+    <footer
+      class="h-30 bg-neutral-800 text-white flex justify-center items-center"
+    >
+      &copy; {new Date().getFullYear()} mimoz
+    </footer>
+  </div>
+</Layout>

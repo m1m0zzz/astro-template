@@ -1,0 +1,39 @@
+name: sync-templates
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'builder/**'
+      - 'scripts/sync-templates.mjs'
+      - '.github/workflows/sync-templates.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      # The sync script cleans each template dir before regenerating it.
+      - name: Sync templates
+        run: npm run sync
+
+      - name: Commit if changed
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "chore: sync templates from builder/"
+            git push
+          else
+            echo "No changes."
+          fi
