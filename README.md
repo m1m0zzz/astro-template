@@ -1,10 +1,19 @@
-# Astro Starter Kit: Basics
+# mimoz's Astro Starter Kit
 
 ```sh
-npm create astro@latest -- --template basics
+npm create astro@latest -- --template m1m0zzz/astro-template
 ```
 
 > 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+
+## ✨ Features
+
+- Tailwind CSS
+- astro/sitemap
+- OGP template
+- ESLint + Prettier
+- husky + lint-staged
+- VSCode config
 
 ## 🚀 Project Structure
 
