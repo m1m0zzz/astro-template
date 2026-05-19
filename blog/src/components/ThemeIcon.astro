@@ -1,0 +1,58 @@
+---
+import { Sun, Moon } from "@lucide/astro"
+
+const { class: className } = Astro.props
+---
+
+<button
+  id="themeToggle"
+  class={`border-0 bg-none hover:opacity-80 cursor-pointer ${className || ""}`}
+  aria-label="テーマを切り替える"
+>
+  <Sun aria-hidden="true" class="w-7.5 dark:hidden" />
+  <Moon aria-hidden="true" class="w-7.5 hidden dark:block" />
+</button>
+
+<script is:inline>
+  const theme = (() => {
+    const localStorageTheme = localStorage?.getItem("theme") ?? ""
+    if (["dark", "light"].includes(localStorageTheme)) {
+      return localStorageTheme
+    }
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      return "dark"
+    }
+    return "light"
+  })()
+
+  if (theme === "light") {
+    document.documentElement.removeAttribute("data-theme")
+  } else {
+    document.documentElement.setAttribute("data-theme", "dark")
+  }
+
+  window.localStorage.setItem("theme", theme)
+
+  const handleToggleClick = () => {
+    const element = document.documentElement
+
+    if (
+      element.hasAttribute("data-theme") &&
+      element.getAttribute("data-theme") === "dark"
+    ) {
+      element.removeAttribute("data-theme")
+    } else {
+      element.setAttribute("data-theme", "dark")
+    }
+
+    const isDark =
+      element.hasAttribute("data-theme") &&
+      element.getAttribute("data-theme") === "dark"
+
+    localStorage.setItem("theme", isDark ? "dark" : "light")
+  }
+
+  document
+    .getElementById("themeToggle")
+    ?.addEventListener("click", handleToggleClick)
+</script>

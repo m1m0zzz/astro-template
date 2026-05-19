@@ -1,9 +1,10 @@
 import js from "@eslint/js"
-import globals from "globals"
-import eslintPluginAstro from "eslint-plugin-astro"
-import eslintConfigPrettier from "eslint-config-prettier"
-import { defineConfig, globalIgnores } from "eslint/config"
 import typescriptParser from "@typescript-eslint/parser"
+import { defineConfig, globalIgnores } from "eslint/config"
+import eslintConfigPrettier from "eslint-config-prettier"
+import eslintPluginAstro from "eslint-plugin-astro"
+import eslintPluginImport from "eslint-plugin-import"
+import globals from "globals"
 
 export default defineConfig([
   globalIgnores([".astro", "dist"]),
@@ -11,6 +12,47 @@ export default defineConfig([
   eslintConfigPrettier,
   ...eslintPluginAstro.configs["flat/recommended"],
   ...eslintPluginAstro.configs["flat/jsx-a11y-recommended"],
+  {
+    plugins: {
+      import: eslintPluginImport,
+    },
+    rules: {
+      "import/order": [
+        "error",
+        {
+          groups: [
+            ["builtin", "external"],
+            ["internal", "parent", "sibling", "index"],
+            "object",
+            "type",
+            "unknown",
+          ],
+          pathGroups: [
+            {
+              pattern: "@/**",
+              group: "internal",
+            },
+            {
+              pattern: "**/*.css",
+              group: "unknown",
+              position: "after",
+            },
+            {
+              pattern: "**/*.{png,jpg,jpeg,gif,svg,webp,avif,ico}",
+              group: "unknown",
+              position: "after",
+            },
+          ],
+          pathGroupsExcludedImportTypes: ["builtin"],
+          "newlines-between": "always",
+          alphabetize: {
+            order: "asc",
+            caseInsensitive: true,
+          },
+        },
+      ],
+    },
+  },
   {
     files: ["**/*.astro"],
     languageOptions: {

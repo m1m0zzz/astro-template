@@ -4,9 +4,9 @@ on:
   push:
     branches: [main]
     paths:
-      - 'builder/**'
-      - 'scripts/sync-templates.mjs'
-      - '.github/workflows/sync-templates.yml'
+      - "builder/**"
+      - "scripts/sync-templates.mjs"
+      - ".github/workflows/sync-templates.yml"
   workflow_dispatch:
 
 permissions:
@@ -20,11 +20,11 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          node-version: "lts/*"
 
       # The sync script cleans each template dir before regenerating it.
-      - name: Sync templates
-        run: npm run sync
+      - run: npm run sync
+      - run: npm run build
 
       - name: Commit if changed
         run: |

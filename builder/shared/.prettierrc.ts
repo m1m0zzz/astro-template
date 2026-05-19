@@ -5,13 +5,14 @@ const config: Config = {
   tabWidth: 2,
   semi: false,
   singleQuote: false,
+  plugins: ["prettier-plugin-tailwindcss"],
   overrides: [
     {
-      "files": "*.astro",
-      "options": {
+      files: "*.astro",
+      options: {
         plugins: ["prettier-plugin-astro"]
-      }
-    }
+      },
+    },
   ],
 }
 

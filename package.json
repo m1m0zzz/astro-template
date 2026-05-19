@@ -3,8 +3,20 @@
   "version": "0.0.0",
   "private": true,
   "description": "Builder for the Astro templates. Edit files under builder/, then run npm run sync.",
+  "workspaces": [
+    "blog",
+    "lp"
+  ],
   "scripts": {
     "sync": "node scripts/sync-templates.mjs",
-    "sync:watch": "node scripts/sync-templates.mjs --watch"
+    "sync:watch": "node scripts/sync-templates.mjs --watch",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "format": "npm run format --workspaces --if-present",
+    "check": "npm run check --workspaces --if-present",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
   }
 }
