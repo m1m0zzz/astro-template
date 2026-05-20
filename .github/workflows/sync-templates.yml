@@ -22,10 +22,10 @@ jobs:
         with:
           node-version: "lts/*"
 
-      - run: npm ci
-
       # The sync script cleans each template dir before regenerating it.
       - run: npm run sync
+
+      - run: npm ci
       - run: npm run build
 
       - name: Commit if changed
