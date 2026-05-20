@@ -10,7 +10,7 @@ const config: Config = {
     {
       files: "*.astro",
       options: {
-        plugins: ["prettier-plugin-astro"]
+        plugins: ["prettier-plugin-astro"],
       },
     },
   ],

@@ -1,10 +1,10 @@
 import js from "@eslint/js"
-import globals from "globals"
+import typescriptParser from "@typescript-eslint/parser"
+import { defineConfig, globalIgnores } from "eslint/config"
+import eslintConfigPrettier from "eslint-config-prettier"
 import eslintPluginAstro from "eslint-plugin-astro"
 import eslintPluginImport from "eslint-plugin-import"
-import eslintConfigPrettier from "eslint-config-prettier"
-import { defineConfig, globalIgnores } from "eslint/config"
-import typescriptParser from "@typescript-eslint/parser"
+import globals from "globals"
 
 export default defineConfig([
   globalIgnores([".astro", "dist"]),
@@ -38,8 +38,7 @@ export default defineConfig([
               position: "after",
             },
             {
-              pattern:
-                "**/*.{png,jpg,jpeg,gif,svg,webp,avif,ico}",
+              pattern: "**/*.{png,jpg,jpeg,gif,svg,webp,avif,ico}",
               group: "unknown",
               position: "after",
             },
