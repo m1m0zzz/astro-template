@@ -38,8 +38,11 @@
     "prettier-plugin-tailwindcss": "^0.8.0"
   },
   "lint-staged": {
-    "**/*.{ts,tsx,js,jsx,md,json,astro,css}": [
+    "**/*.{js,jsx,cjs,mjs,ts,tsx,mts,cts,astro}": [
       "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.{json,css,html,md,mdx,yaml,yml}": [
       "prettier --write"
     ]
   }
