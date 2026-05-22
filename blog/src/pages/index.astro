@@ -7,9 +7,9 @@ import Layout from "@/layouts/Layout.astro"
 
 <Layout>
   <div
-    class="text-foreground bg-background grid grid-rows-[auto_1fr_auto] min-h-full"
+    class="text-foreground bg-background grid min-h-full grid-rows-[auto_1fr_auto]"
   >
-    <nav class="flex justify-between items-center h-15 px-4 bg-neutral-200">
+    <nav class="flex h-15 items-center justify-between bg-neutral-200 px-4">
       <div>
         <a href="/"
           ><img
@@ -23,13 +23,13 @@ import Layout from "@/layouts/Layout.astro"
       <a
         href="https://github.com/"
         target="_blank"
-        class="flex justify-center items-center gap-1"
+        class="flex items-center justify-center gap-1"
       >
         <span> GitHub </span>
         <ExternalLink class="inline-block size-4" />
       </a>
     </nav>
-    <main class="w-full max-w-5xl mx-auto p-4">
+    <main class="mx-auto w-full max-w-5xl p-4">
       <section id="hero">
         <h1>
           To get started, open the <code><pre>src/pages</pre></code> directory in
@@ -38,7 +38,7 @@ import Layout from "@/layouts/Layout.astro"
       </section>
     </main>
     <footer
-      class="h-30 bg-neutral-800 text-white flex justify-center items-center"
+      class="flex h-30 items-center justify-center bg-neutral-800 text-white"
     >
       &copy; {new Date().getFullYear()} mimoz
     </footer>
