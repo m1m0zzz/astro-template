@@ -6,6 +6,7 @@ const config: Config = {
   semi: false,
   singleQuote: false,
   plugins: ["prettier-plugin-astro", "prettier-plugin-tailwindcss"],
+  tailwindStylesheet: "./src/styles/global.css",
   overrides: [
     {
       files: "*.astro",
