@@ -9,4 +9,7 @@ export default defineConfig({
   },
   integrations: [sitemap()],
   site: "https://example.com", // TODO: Update this to your site's URL
+  devToolbar: {
+    enabled: false,
+  },
 })
