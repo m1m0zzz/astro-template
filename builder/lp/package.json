@@ -22,8 +22,7 @@
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.3.5",
     "tailwindcss": "^4.3.0",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.3"
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "8.59.2",
@@ -46,5 +45,8 @@
     "**/*.{json,css,html,md,mdx,yaml,yml}": [
       "prettier --write"
     ]
+  },
+  "overrides": {
+    "vite": "^7"
   }
 }
