@@ -8,22 +8,26 @@
 // so `npm create astro@latest -- --template m1m0zzz/astro-template/<name>`
 // (giget extracts only that subdirectory) works without symlinks.
 //
-// Run: `npm run sync`            one-shot
-//      `npm run sync -- --watch` rebuild on changes under builder/
+// Run: `npm run sync`               one-shot (forward sync)
+//      `npm run sync -- --watch`    rebuild on changes under builder/
+//      `node scripts/sync-templates.mjs --reverse`
+//                                   copy formatted output back into builder/
 //
 // Idempotent: each template dir is cleaned (except the generated/ignored dirs
 // below) and rebuilt from scratch.
 
 import {
+  copyFileSync,
   cpSync,
   existsSync,
+  lstatSync,
   mkdirSync,
   readdirSync,
   rmSync,
   symlinkSync,
   watch,
 } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -38,15 +42,7 @@ const PRESERVE = new Set(['node_modules', '.astro', 'dist']);
 // Format: [target, linkName] -> `linkName` points to `target` (same directory).
 const SYMLINKS = [['AGENTS.md', 'CLAUDE.md']];
 
-function cleanTemplateDir(outDir) {
-  if (!existsSync(outDir)) return;
-  for (const entry of readdirSync(outDir)) {
-    if (PRESERVE.has(entry)) continue;
-    rmSync(join(outDir, entry), { recursive: true, force: true });
-  }
-}
-
-function sync() {
+function getTemplates() {
   const templates = readdirSync(builderDir, { withFileTypes: true })
     .filter((e) => e.isDirectory() && e.name !== 'shared')
     .map((e) => e.name);
@@ -55,6 +51,64 @@ function sync() {
     console.error('No templates found under builder/.');
     process.exit(1);
   }
+  return templates;
+}
+
+function cleanTemplateDir(outDir) {
+  if (!existsSync(outDir)) return;
+  for (const entry of readdirSync(outDir)) {
+    if (PRESERVE.has(entry)) continue;
+    rmSync(join(outDir, entry), { recursive: true, force: true });
+  }
+}
+
+// Relative paths of every real file under `dir`, skipping PRESERVE dirs.
+function listFiles(dir, prefix = '') {
+  const out = [];
+  if (!existsSync(dir)) return out;
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (PRESERVE.has(entry.name)) continue;
+    const rel = join(prefix, entry.name);
+    if (entry.isDirectory()) {
+      out.push(...listFiles(join(dir, entry.name), rel));
+    } else {
+      out.push(rel);
+    }
+  }
+  return out;
+}
+
+function copyBack(from, to) {
+  if (!existsSync(from)) return;
+  if (lstatSync(from).isSymbolicLink()) return; // don't follow generated symlinks
+  copyFileSync(from, to);
+  console.log(`synced back: ${relative(root, to)}`);
+}
+
+// Copy the formatted output back into builder/ so the source mirrors the
+// committed result. Template-specific files map 1:1; a shared file is copied
+// from a template that does not override it.
+function syncBack() {
+  const templates = getTemplates();
+
+  for (const name of templates) {
+    const outDir = join(root, name);
+    for (const rel of listFiles(join(builderDir, name))) {
+      copyBack(join(outDir, rel), join(builderDir, name, rel));
+    }
+  }
+
+  for (const rel of listFiles(sharedDir)) {
+    for (const name of templates) {
+      if (existsSync(join(builderDir, name, rel))) continue; // overridden
+      copyBack(join(root, name, rel), join(sharedDir, rel));
+      break;
+    }
+  }
+}
+
+function sync() {
+  const templates = getTemplates();
 
   for (const name of templates) {
     const outDir = join(root, name);
@@ -76,6 +130,11 @@ function sync() {
 
     console.log(`synced: ${name}/`);
   }
+}
+
+if (process.argv.includes('--reverse')) {
+  syncBack();
+  process.exit(0);
 }
 
 sync();

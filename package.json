@@ -9,7 +9,9 @@
   ],
   "scripts": {
     "sync": "node scripts/sync-templates.mjs",
+    "sync:strict": "node scripts/sync-templates.mjs && npm run check && node scripts/sync-templates.mjs --reverse",
     "sync:watch": "node scripts/sync-templates.mjs --watch",
+    "sync:reverse": "node scripts/sync-templates.mjs --reverse",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "format": "npm run format --workspaces --if-present",
