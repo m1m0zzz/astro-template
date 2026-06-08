@@ -3,7 +3,7 @@ import typescriptParser from "@typescript-eslint/parser"
 import { defineConfig, globalIgnores } from "eslint/config"
 import eslintConfigPrettier from "eslint-config-prettier"
 import eslintPluginAstro from "eslint-plugin-astro"
-import eslintPluginImport from "eslint-plugin-import"
+import eslintPluginSimpleImportSort from "eslint-plugin-simple-import-sort"
 import globals from "globals"
 
 export default defineConfig([
@@ -14,43 +14,32 @@ export default defineConfig([
   ...eslintPluginAstro.configs["flat/jsx-a11y-recommended"],
   {
     plugins: {
-      import: eslintPluginImport,
+      "simple-import-sort": eslintPluginSimpleImportSort,
     },
     rules: {
-      "import/order": [
+      "simple-import-sort/imports": [
         "error",
         {
           groups: [
-            ["builtin", "external"],
-            ["internal", "parent", "sibling", "index"],
-            "object",
-            "type",
-            "unknown",
+            // Node.js builtins and external packages.
+            ["^node:", "^@?\\w"],
+            // Internal alias (@/), then parent/sibling/index relative imports.
+            [
+              "^@/",
+              "^\\.\\.(?!/?$)",
+              "^\\.\\./?$",
+              "^\\./(?=.*/)(?!/?$)",
+              "^\\.(?!/?$)",
+              "^\\./?$",
+            ],
+            // Style imports.
+            ["^.+\\.css$"],
+            // Image imports.
+            ["^.+\\.(png|jpe?g|gif|svg|webp|avif|ico)$"],
           ],
-          pathGroups: [
-            {
-              pattern: "@/**",
-              group: "internal",
-            },
-            {
-              pattern: "**/*.css",
-              group: "unknown",
-              position: "after",
-            },
-            {
-              pattern: "**/*.{png,jpg,jpeg,gif,svg,webp,avif,ico}",
-              group: "unknown",
-              position: "after",
-            },
-          ],
-          pathGroupsExcludedImportTypes: ["builtin"],
-          "newlines-between": "always",
-          alphabetize: {
-            order: "asc",
-            caseInsensitive: true,
-          },
         },
       ],
+      "simple-import-sort/exports": "error",
     },
   },
   {
