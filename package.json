@@ -18,6 +18,7 @@
     "sync:reverse": "node scripts/sync-templates.mjs --reverse",
     "build": "npm run build --workspaces --if-present",
     "build:pages": "node scripts/build-pages.mjs",
+    "preview": "node scripts/build-pages.mjs --preview && serve _preview -l 4321",
     "lint": "npm run lint --workspaces --if-present",
     "format": "npm run format --workspaces --if-present",
     "check": "npm run check --workspaces --if-present",
@@ -25,7 +26,8 @@
   },
   "devDependencies": {
     "husky": "9.1.7",
-    "marked": "18.0.9"
+    "marked": "18.0.9",
+    "serve": "14.2.6"
   },
   "allowScripts": {
     "esbuild": true,

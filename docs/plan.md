@@ -69,6 +69,17 @@ https://m1m0zzz.github.io/astro-template/blog/
     `upload-pages-artifact` → `deploy-pages`
   - `.nojekyll` は不要（`deploy-pages` は Jekyll を通さない）と判断し、入れていない
 
+- [x] **3-2. `npm run preview` でローカル確認できるようにする**
+  - `serve`（vercel/serve）を devDependency に追加、`14.2.6` で固定
+  - 出力の全パスが `base` 付きの絶対パスなので、`serve _site` では全て 404 になる。
+    `serve.json` の `rewrites` も試したが `:path*` が複数セグメントを展開できず、
+    2 階層以深（`/astro-template/lp/sitemap-index.xml` など）が解決できなかった
+  - 代わりに `build-pages.mjs --preview` で `_preview/astro-template/` に組み立て、
+    `_preview/` を配信する方式にした。rewrite に頼らず本番と同じ URL を再現できる
+  - 出力先は `BASE` 定数から導出しているので、リポジトリ名の変更時も 1 箇所で済む
+  - 検証済み: 出力 HTML が参照する 15 URL すべてが 200
+  - `_preview/` は `.gitignore` に追加
+
 - [ ] **4. リポジトリ設定で Pages を有効化**（手動）
   - Settings > Pages > Source を **GitHub Actions** に変更
 

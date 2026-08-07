@@ -10,6 +10,7 @@
 //
 // Run: `npm run build && npm run build:pages`
 //      `node scripts/build-pages.mjs [outDir]`   (default: _site/)
+//      `node scripts/build-pages.mjs --preview`  (_preview/<base>/, see below)
 
 import {
   copyFileSync,
@@ -32,7 +33,17 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 // `base` in each template's astro.config.mjs, minus the template name.
 const BASE = '/astro-template/';
 
-const outDir = process.argv[2] ?? join(root, '_site');
+// Every path in the output is absolute and rooted at BASE, so a plain static
+// server must see the site nested under that path. `--preview` builds into
+// `_preview/<base>/` and `npm run preview` serves `_preview/`, which reproduces
+// the deployed URLs exactly instead of relying on server rewrite rules.
+const args = process.argv.slice(2);
+const preview = args.includes('--preview');
+
+const previewRoot = join(root, '_preview');
+const outDir = preview
+  ? join(previewRoot, ...BASE.split('/').filter(Boolean))
+  : (args.find((a) => !a.startsWith('-')) ?? join(root, '_site'));
 
 // Same discovery rule as scripts/sync-templates.mjs, so a new template needs no
 // change here.
@@ -166,3 +177,7 @@ for (const name of getTemplates()) {
 }
 
 console.log(`built: ${outDir}`);
+
+if (preview) {
+  console.log(`\nserve ${previewRoot}, then open http://localhost:4321${BASE}`);
+}

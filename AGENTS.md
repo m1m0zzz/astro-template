@@ -42,7 +42,24 @@ npm run build        # 全ワークスペースをビルド
 npm run lint         # 全ワークスペースをリント
 npm run format       # 全ワークスペースをフォーマット
 npm run check        # lint + format を実行
+npm run build:pages  # GitHub Pages 用に _site/ を組み立てる（先に build が必要）
+npm run preview      # Pages の出力をローカル配信する
 ```
+
+## GitHub Pages
+
+`main` への push で `.github/workflows/pages.yml` が
+`https://m1m0zzz.github.io/astro-template/` に公開する。
+`README.md` がトップページになり、各テンプレートは `/lp/`, `/blog/` に配置される。
+
+出力の全パスは `base`（`/astro-template/<name>`）付きの絶対パスなので、
+静的サーバーはその階層の下でサイトを見る必要がある。`npm run preview` は
+`_preview/astro-template/` に組み立ててから `_preview/` を配信することで、
+本番と同じ URL を再現している。開いた後のトップは
+`http://localhost:4321/astro-template/`。
+
+テンプレート内のリンクとアセット参照は `src/lib/path.ts` の `withBase()` を通すこと。
+`href="/favicon.svg"` のようなルート相対パスは `base` を無視して壊れる。
 
 ## sync の仕組み
 
