@@ -6,7 +6,8 @@
 ## 方針
 
 現状の単一ブランチ構成（main がデフォルト、`lp/` と `blog/` は生成物として main にコミット済み）
-のまま実装する。既存の `pull-request.yml` / `sync-templates.yml` / ルート `package.json` は変更しない。
+のまま実装する。既存の `pull-request.yml` / `sync-templates.yml` は変更しない
+（ルート `package.json` には `build:pages` スクリプトと `marked` のみ追加）。
 
 環境変数や Pages 専用 config は使わない。`builder/lp/astro.config.mjs` と
 `builder/blog/astro.config.mjs` に `site` / `base` を**直接書く**。
@@ -51,35 +52,22 @@ https://m1m0zzz.github.io/astro-template/blog/
   - OGP は 1200×630。README の Features にも "OGP template" と書かれているので、
     プレースホルダー画像を置く必要がある
 
-- [ ] **2. `README.md` → `index.html` 変換スクリプト**
-  - `scripts/build-pages-index.mjs`（仮）を追加
-  - `marked` をルートの devDependency に追加（`.npmrc` の `min-release-age=3` に注意）
-  - 相対リンクの書き換えが必要: `[LP](./lp/)` → `/astro-template/lp/`
-  - 最低限の CSS をインラインで持たせる（外部 CDN は使わない）
-  - `<title>`, `lang="ja"`, viewport meta を入れる
+- [x] **2. `README.md` → `index.html` 変換スクリプト**
+  - `scripts/build-pages.mjs` を追加（`npm run build:pages`）。`marked` は `18.0.9` で固定
+  - index の生成だけでなく **`_site/` の組み立て全体**を担わせた。
+    ワークフローに散らすよりローカルで Pages 出力をそのまま検証できる方が確実なため
+  - 相対リンクを書き換え: `[LP](./lp/)` → `/astro-template/lp/`
+  - CSS はインライン。`prefers-color-scheme` でダークモード対応
+  - `lang` は `ja` ではなく `en`（README が英語のため）
+  - テンプレート一覧は `sync-templates.mjs` と同じく `builder/` から検出するので、
+    テンプレートを増やしてもこのスクリプトの変更は不要
+  - `_site/` は `.gitignore` に追加
 
-- [ ] **3. `pages.yml` を追加**
-  - トリガー: `push: branches: [main]` + `workflow_dispatch`
-  - `sync-templates.yml` が sync 結果を自動コミットすることがあるため、
-    そのコミットでも Pages が再デプロイされる（＝意図通り）
-  - 処理:
-    1. checkout → setup-node（`node-version-file: ".nvmrc"`）→ `npm install -g npm@12` → `npm ci`
-       （既存 workflow と同じ手順。npm 12 の明示インストールが必要）
-    2. `npm run build`（config に site / base が書いてあるので追加の指定は不要）
-    3. `node scripts/build-pages-index.mjs` で index を生成
-    4. `_site/` に集約:
-       ```
-       _site/index.html   ← 2 の出力
-       _site/lp/          ← lp/dist
-       _site/blog/        ← blog/dist
-       ```
-       `base` を設定しても `dist/` の中身は入れ子にならない（`dist/` の直下が base に対応する）ので、
-       `cp -r lp/dist _site/lp` でよい
-    5. `actions/upload-pages-artifact` → `actions/deploy-pages`
-  - `permissions: contents: read, pages: write, id-token: write`
-  - `concurrency: group: pages, cancel-in-progress: false`
-  - action は既存 workflow に倣って SHA ピン + バージョンコメントで固定する
-  - `.nojekyll` の要否を確認（`deploy-pages` は Jekyll を通さないので原則不要）
+- [x] **3. `pages.yml` を追加**
+  - `build` / `deploy` の 2 ジョブ構成。action は SHA ピン + バージョンコメント
+  - `npm ci` → `configure-pages` → `npm run build` → `npm run build:pages` →
+    `upload-pages-artifact` → `deploy-pages`
+  - `.nojekyll` は不要（`deploy-pages` は Jekyll を通さない）と判断し、入れていない
 
 - [ ] **4. リポジトリ設定で Pages を有効化**（手動）
   - Settings > Pages > Source を **GitHub Actions** に変更

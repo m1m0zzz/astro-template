@@ -17,13 +17,15 @@
     "sync:watch": "node scripts/sync-templates.mjs --watch",
     "sync:reverse": "node scripts/sync-templates.mjs --reverse",
     "build": "npm run build --workspaces --if-present",
+    "build:pages": "node scripts/build-pages.mjs",
     "lint": "npm run lint --workspaces --if-present",
     "format": "npm run format --workspaces --if-present",
     "check": "npm run check --workspaces --if-present",
     "prepare": "husky"
   },
   "devDependencies": {
-    "husky": "9.1.7"
+    "husky": "9.1.7",
+    "marked": "18.0.9"
   },
   "allowScripts": {
     "esbuild": true,
