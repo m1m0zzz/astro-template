@@ -4,6 +4,10 @@
 **/dist/
 **/.husky/_/
 
+# GitHub Pages output, assembled by scripts/build-pages.mjs
+/_site/
+/_preview/
+
 # logs
 **/npm-debug.log*
 **/pnpm-debug.log*

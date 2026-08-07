@@ -2,6 +2,7 @@
 import { ExternalLink } from "@lucide/astro"
 
 import Layout from "@/layouts/Layout.astro"
+import { withBase } from "@/lib/path"
 
 import astroLogo from "../assets/astro.svg"
 ---
@@ -12,7 +13,7 @@ import astroLogo from "../assets/astro.svg"
   >
     <nav class="flex h-15 items-center justify-between bg-neutral-200 px-4">
       <div>
-        <a href="/"
+        <a href={withBase()}
           ><img
             src={astroLogo.src}
             width="115"

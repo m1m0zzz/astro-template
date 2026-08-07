@@ -1,5 +1,6 @@
 ---
 import GoogleAnalytics from "@/components/GoogleAnalytics.astro"
+import { withBase } from "@/lib/path"
 
 import "@/styles/global.css"
 
@@ -16,6 +17,9 @@ const { title: _title, description: _description } = Astro.props
 
 const title = _title ? `${_title} | ${siteName}` : siteName
 const description = _description || defaultDescription
+
+/** 現在のページの絶対 URL。`Astro.url.pathname` は base を含む */
+const canonical = new URL(Astro.url.pathname, Astro.site)
 ---
 
 <!doctype html>
@@ -23,8 +27,9 @@ const description = _description || defaultDescription
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={withBase("favicon.svg")} />
+    <link rel="icon" href={withBase("favicon.ico")} />
     <title>{title}</title>
     <!-- Google fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -41,8 +46,11 @@ const description = _description || defaultDescription
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={import.meta.env.SITE} />
-    <meta property="og:image" content={`${import.meta.env.SITE}/ogp.png`} />
+    <meta property="og:url" content={canonical} />
+    <meta
+      property="og:image"
+      content={new URL(withBase("OGP.png"), Astro.site)}
+    />
     <meta property="og:site_name" content={title} />
     <meta property="og:description" content={description} />
     <meta name="twitter:card" content="summary_large_image" />
