@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "description": "Builder for the Astro templates. Edit files under builder/, then run npm run sync.",
+  "engines": {
+    "node": ">=24.15.0",
+    "npm": ">=12.0.0"
+  },
   "workspaces": [
     "blog",
     "lp"
@@ -20,5 +24,9 @@
   },
   "devDependencies": {
     "husky": "9.1.7"
+  },
+  "allowScripts": {
+    "esbuild": true,
+    "sharp": true
   }
 }
