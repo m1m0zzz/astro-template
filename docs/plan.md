@@ -106,6 +106,9 @@ https://m1m0zzz.github.io/astro-template/blog/
   `blog/src/pages/index.astro` は `@/layouts/Layout.astro` を import しており、
   `BlogLayout.astro` はどこからも使われていない。今回 base 対応だけ揃えたが、
   記事ページ用に作り直すか削除するかを決めたい。
-- **sitemap に `/astro-template/lp` と `/astro-template/lp/` が両方出力される**
-  `@astrojs/sitemap` が `base` 使用時に末尾スラッシュ有無の両方を出す。
-  重複 URL になるので `trailingSlash` の設定か sitemap の `filter` で片方に寄せたい。
+- ~~**sitemap に `/astro-template/lp` と `/astro-template/lp/` が両方出力される**~~
+  → 対応済み。`base` の末尾スラッシュ抜けが原因だった。
+  `@astrojs/sitemap` はビルドされたページとルート定義の 2 系統から URL を組み立てるが、
+  トップページは前者が `base` をそのまま使うため、末尾スラッシュが無いと表記が食い違い
+  `Set` の重複排除をすり抜ける。`base` に末尾スラッシュを付けて解消した。
+  なお `trailingSlash` はページ由来の URL に影響しないため、単独では効かない。
