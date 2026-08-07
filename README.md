@@ -25,5 +25,7 @@ npm create astro@latest -- --template m1m0zzz/astro-template/blog
 
 ## Templates
 
-- [LP](./lp/): OK
-- [Blog](./blog/): In progress
+| Template          | Demo                                                     | Status      |
+| :---------------- | :------------------------------------------------------- | :---------- |
+| [LP](./lp/)       | [Open](https://m1m0zzz.github.io/astro-template/lp/)      | OK          |
+| [Blog](./blog/)   | [Open](https://m1m0zzz.github.io/astro-template/blog/)    | In progress |

@@ -80,25 +80,24 @@ https://m1m0zzz.github.io/astro-template/blog/
   - 検証済み: 出力 HTML が参照する 15 URL すべてが 200
   - `_preview/` は `.gitignore` に追加
 
-- [ ] **4. リポジトリ設定で Pages を有効化**（手動）
+- [x] **4. リポジトリ設定で Pages を有効化**（手動）
   - Settings > Pages > Source を **GitHub Actions** に変更
 
-- [ ] **5. 動作確認**
-  - 3 つの URL が表示されること
-  - CSS / 画像 / 内部リンク / OGP 画像が壊れていないこと（`base` 付きで正しく解決されているか）
-  - `sitemap-index.xml` の URL に `base` が含まれていること
+- [x] **5. 動作確認**
+  - #33 の merge で初回デプロイ成功（55s）
+  - 公開サイトの `/`, `/lp/`, `/blog/`, `/lp/sitemap-index.xml`, `/favicon.svg` が 200
+  - lp が参照する CSS・favicon・sitemap も実地で 200 を確認
 
-- [ ] **6. README に Pages へのリンクを追加**
-  - `## Templates` の `[LP](./lp/)` は GitHub 上でのディレクトリリンクなので、
-    デモサイトへのリンクは別途併記する
+- [x] **6. README に Pages へのリンクを追加**
+  - `## Templates` をテーブル化し、Demo 列に公開 URL を追加
+  - README は Pages のトップページでもあるので、`build-pages.mjs` に
+    テーブルの CSS と横スクロール用のラッパーを追加した
 
-- [ ] **7. テンプレート側の README に `site` / `base` と `withBase()` を記載する**
-  - 1・1-2 を「実例」として成立させるための仕上げ。scaffold したユーザーには
-    `base: "/astro-template/lp"` という他人の設定が残るので、消し方の説明が要る
-  - `builder/lp/README.md`, `builder/blog/README.md` の `## 🧞 Commands` 表の下に追記:
-    - ドメイン直下に置くなら `base` を消す
-    - サブディレクトリに置くなら `base` を書き換え、サイト内リンクは `withBase()` を通す
-  - 両ファイルとも同一内容なので同時に更新する
+- [x] **7. テンプレート側の README に `site` / `base` と `withBase()` を記載する**
+  - `## 🌐 Deploying to a subdirectory` を両テンプレートの README に追加
+  - ドメイン直下なら `base` を消す / サブディレクトリなら `site` はオリジンのみ
+    （`@astrojs/sitemap` が結合するため二重になる）を明記
+  - `withBase()` の使用例と、ルート相対パスが壊れる理由を記載
 
 ## 別途検討
 

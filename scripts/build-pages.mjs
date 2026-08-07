@@ -64,7 +64,11 @@ function buildIndex() {
   // index is reached without a trailing slash.
   const body = marked
     .parse(readme, { async: false })
-    .replace(/href="\.\/([^"]*)"/g, (_, path) => `href="${BASE}${path}"`);
+    .replace(/href="\.\/([^"]*)"/g, (_, path) => `href="${BASE}${path}"`)
+    // Tables are the one block that can outgrow the column, so let them scroll
+    // on their own instead of the page.
+    .replace(/<table>/g, '<div class="table-wrap"><table>')
+    .replace(/<\/table>/g, '</table></div>');
 
   writeFileSync(
     join(outDir, 'index.html'),
@@ -151,6 +155,14 @@ const css = `
     background: var(--surface);
   }
   pre code { padding: 0; background: none; }
+  .table-wrap { overflow-x: auto; }
+  table { border-collapse: collapse; }
+  th, td {
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--border);
+    text-align: left;
+  }
+  th { background: var(--surface); }
   footer {
     margin-top: 4rem;
     padding-top: 1.5rem;
