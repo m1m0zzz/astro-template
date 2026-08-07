@@ -1,11 +1,34 @@
 ---
 import GoogleAnalytics from "@/components/GoogleAnalytics.astro"
+import { withBase } from "@/lib/path"
 
 import "@/styles/global.css"
 
-const title = "TODO"
-const description = "TODO"
-const twitterID = "@TODO"
+interface Props {
+  title?: string
+  description?: string
+}
+
+const { title: _title, description: _description } = Astro.props
+
+const siteName = "SITE NAME" // TODO
+const title = _title ? `${_title} | ${siteName}` : siteName
+const description = _description || "SITE DESCRIPTION" // TODO
+const twitterID = "@xxxxxx" // TODO
+
+// テスト環境などで noindex にしたい場合、NO_INDEX=1 を渡す
+const noIndex = import.meta.env.NO_INDEX === "1"
+
+// 現在のページの絶対 URL。`Astro.url.pathname` は base を含む
+const ogUrl = new URL(Astro.url.pathname, Astro.site)
+
+// TODO: OGP.png をpublicフォルダに配置
+// public/OGP.png（1200×630）
+// const ogImage = {
+//   url: new URL(withBase("OGP.png"), Astro.site),
+//   width: "1200",
+//   height: "630",
+// }
 ---
 
 <!doctype html>
@@ -13,10 +36,16 @@ const twitterID = "@TODO"
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="sitemap" href={withBase("sitemap-index.xml")} />
+    <link rel="icon" href={withBase("favicon.ico")} sizes="32x32" />
+    <link rel="icon" href={withBase("favicon.svg")} type="image/svg+xml" />
+    <link
+      rel="apple-touch-icon"
+      href={withBase("apple-touch-icon.png")}
+      sizes="180x180"
+    />
+    {noIndex && <meta name="robots" content="noindex" />}
     <title>{title}</title>
-    <!-- Google fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -27,14 +56,17 @@ const twitterID = "@TODO"
     <!-- TODO: Set the ID, or delete the line below if Google Analytics is not required. -->
     <GoogleAnalytics id="G-XXXXXXXXXX" />
 
-    <!-- OGP -->
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={import.meta.env.SITE} />
-    <meta property="og:image" content={`${import.meta.env.SITE}/ogp.png`} />
-    <meta property="og:site_name" content={title} />
+    <meta property="og:url" content={ogUrl} />
+    <!-- TODO: OGP.png をpublicフォルダに配置 -->
+    <!-- <meta property="og:image" content={ogImage.url} />
+    <meta property="og:image:width" content={ogImage.width} />
+    <meta property="og:image:height" content={ogImage.height} /> -->
+    <meta property="og:site_name" content={siteName} />
     <meta property="og:description" content={description} />
+    <meta property="og:locale" content="ja_JP" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content={twitterID} />
   </head>
