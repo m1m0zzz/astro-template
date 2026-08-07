@@ -34,13 +34,17 @@ All commands are run from the root of the project, from a terminal:
 
 ```js
 site: "https://m1m0zzz.github.io",
-base: "/astro-template/lp",
+base: "/astro-template/lp/",
 ```
 
 - **Serving from the root of a domain** — delete `base` and set `site` to your URL.
 - **Serving from a subdirectory** (GitHub Pages project sites, etc.) — keep only
   the origin in `site` and put the subpath in `base`. `@astrojs/sitemap` joins the
   two, so a `site` that already contains the subpath would double it.
+- **Keep the trailing slash on `base`** — `@astrojs/sitemap` builds its URLs from
+  both the built pages and the route definitions, and only the former uses `base`
+  verbatim. Without the trailing slash the two disagree on the home page and it
+  is listed twice.
 
 Internal links and asset paths must go through `withBase()` from `src/lib/path.ts`:
 
