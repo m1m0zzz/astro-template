@@ -20,7 +20,12 @@ jobs:
 
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: "lts/*"
+          node-version: ".nvmrc"
+          cache: npm
+
+      # npm 12 を同梱する Node がまだ無いため明示的に入れる。
+      # .npmrc と engines が npm 12 前提なので、無いと npm ci が EBADENGINE で落ちる
+      - run: npm install -g npm@12
 
       - run: npm ci
 
