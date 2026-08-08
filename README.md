@@ -1,4 +1,22 @@
-# mimoz's Astro Starter Kit
+# astronaut (astro-template)
+
+## 🧩 Components (ToDo)
+
+Install
+
+```sh
+npm i @m1m0zzz/astronaut
+```
+
+List of Components
+
+- `Carousel`
+- `GoogleAnalytics`
+
+
+## 🖨️ Templates
+
+use Template
 
 1. Run one of the commands below.
 
@@ -12,20 +30,34 @@ npm create astro@latest -- --template m1m0zzz/astro-template/blog
 
 2. Open your preferred editor (VSCode is recommended) and replace the string `TODO`.
 
-## ✨ Basic Features
+### ✨ Features
+
+Task List is TODO
+
+#### Base
 
 - Tailwind CSS
-- astro/sitemap
 - AGENTS.md
 - OGP template
 - ESLint + Prettier
 - husky + lint-staged
 - VSCode config
 - additional tools and configs: nvm (Node=24), npmrc, editorconfig, cspell, renovate
+- [ ] ~~astro/sitemap~~
+- [ ] icon convert script
 
-## Templates
+#### [LP](https://github.com/m1m0zzz/astro-template/tree/main/lp) \[[Demo](https://m1m0zzz.github.io/astro-template/lp/)\]
 
-| Template          | Demo                                                     | Status      |
-| :---------------- | :------------------------------------------------------- | :---------- |
-| [LP](https://github.com/m1m0zzz/astro-template/tree/main/lp)       | [Open](https://m1m0zzz.github.io/astro-template/lp/)      | OK          |
-| [Blog](https://github.com/m1m0zzz/astro-template/tree/main/blog/)   | [Open](https://m1m0zzz.github.io/astro-template/blog/)    | In progress |
+- [ ] Font Optimizer
+- [ ] Carousel Component (use `Embla Carousel`)
+
+#### [Blog](https://github.com/m1m0zzz/astro-template/tree/main/blog/)  \[[Demo](https://m1m0zzz.github.io/astro-template/blog/)\]
+
+- astro/sitemap
+- [ ] Content Collections
+- [ ] Blog Layout
+  - [ ] blog css
+  - [ ] ToC (Table of Content) Component
+- [ ] list page
+- [ ] author frontmatter (name,link,icon)
+- [ ] Dynamic OG Images
