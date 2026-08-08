@@ -27,5 +27,5 @@ npm create astro@latest -- --template m1m0zzz/astro-template/blog
 
 | Template          | Demo                                                     | Status      |
 | :---------------- | :------------------------------------------------------- | :---------- |
-| [LP](./lp/)       | [Open](https://m1m0zzz.github.io/astro-template/lp/)      | OK          |
-| [Blog](./blog/)   | [Open](https://m1m0zzz.github.io/astro-template/blog/)    | In progress |
+| [LP](https://github.com/m1m0zzz/astro-template/tree/main/lp)       | [Open](https://m1m0zzz.github.io/astro-template/lp/)      | OK          |
+| [Blog](https://github.com/m1m0zzz/astro-template/tree/main/blog/)   | [Open](https://m1m0zzz.github.io/astro-template/blog/)    | In progress |
