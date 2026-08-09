@@ -16,7 +16,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   const postPaths = await Promise.all(
     posts.map(async (post) => {
-      const author = await getEntry(post.data.author)
+      const author = post.data.author
+        ? await getEntry(post.data.author)
+        : undefined
 
       return {
         params: { slug: post.id },

@@ -34,7 +34,7 @@ updatedDate: 2026-08-07 # optional
 draft: false # optional
 tags:
   - astro
-author: mimoz # a key in src/content/authors.json
+author: mimoz # optional, a key in src/content/authors.json
 ---
 
 本文をここに書く。
@@ -43,7 +43,7 @@ author: mimoz # a key in src/content/authors.json
 - `draft: true` posts show up in `npm run dev` but are excluded from the build,
   the RSS feed, the sitemap, and OG image generation.
 - Authors live in `src/content/authors.json` and are referenced by key. A key that
-  does not exist fails the build.
+  does not exist fails the build. Leave `author` out and no author is shown.
 - Avoid slugs that are only digits — the post list uses `/posts/2/` for its
   second page, so `src/content/posts/2.md` would collide with it.
 
@@ -52,7 +52,8 @@ author: mimoz # a key in src/content/authors.json
 1. Replace the `TODO`s in `src/config.ts` (site name, description, Twitter ID).
 2. Point `site` / `base` in `astro.config.mjs` at your own URL.
 3. Put your own entries in `src/content/authors.json`.
-4. Delete the sample posts in `src/content/posts/`.
+4. Delete the sample posts in `src/content/posts/`. The `dummy-*.md` ones only
+   exist so the list and tag pages have enough posts to paginate.
 
 `src/config.ts` also holds the blog settings: posts per page, how many posts the
 landing page shows, which heading levels go into the table of contents, and the

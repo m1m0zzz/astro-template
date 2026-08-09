@@ -5,7 +5,7 @@ pubDate: 2026-08-01
 tags:
   - お知らせ
   - astro
-author: mimoz
+# author: mimoz
 ---
 
 このテンプレートは、Astro でブログを始めるための最小限の土台です。

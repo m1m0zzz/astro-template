@@ -33,7 +33,6 @@ list page / author frontmatter / Dynamic OG Images）を実装するためのプ
 `builder/shared/` に置く（lp にも配られる）:
 
 - テーマ切替一式（`ThemeIcon.astro` の改修 + FOUC 防止スクリプト + dark トークン）
-- `src/lib/date.ts`（日付フォーマット）
 - `src/components/ShareButtons.astro`
 - `src/config.ts`（共通フィールドのみ。blog 側で上書きする）
 
@@ -74,8 +73,6 @@ builder/shared/
       ShareButtons.astro          # 新規
     layouts/
       Layout.astro                # 改修: config 参照 / ogImage prop / ThemeScript
-    lib/
-      date.ts                     # 新規
     styles/
       global.css                  # 改修: dark 用トークンを追加
 
@@ -109,6 +106,7 @@ builder/blog/
       global.css                  # 上書き: shared 版 + typography / Shiki / コピーボタン
     lib/
       posts.ts                    # 新規: draft 除外 / ソート / タグ集計 / 読了時間
+      date.ts                     # 新規: 表示用の日付フォーマット
       og.ts                       # 新規: satori + resvg
       fonts.ts                    # 新規: フォント fetch + キャッシュ
     pages/
@@ -325,9 +323,9 @@ export const collections = { posts, authors }
 
 各フェーズの終わりに `npm run sync:strict` と `npm run build` を通す。
 
-1. **基盤** — shared: `config.ts` / `date.ts` / dark トークン / `ThemeScript` 分離 /
+1. **基盤** — shared: `config.ts` / dark トークン / `ThemeScript` 分離 /
    `Layout.astro` 改修。blog: `config.ts` 上書き、`content.config.ts`、`authors.json`、
-   サンプル記事 3〜4 本、`lib/posts.ts`。`BlogLayout.astro` を削除。
+   サンプル記事 3〜4 本、`lib/posts.ts`、`lib/date.ts`。`BlogLayout.astro` を削除。
 2. **記事ページ** — 依存追加（typography / Shiki 設定）、`PostLayout`、`Header` /
    `Footer`、`AuthorBadge`、`TagList`、`/posts/[slug].astro`。
 3. **一覧まわり** — `PostCard`、`Pagination`、`/posts/[...page].astro`、

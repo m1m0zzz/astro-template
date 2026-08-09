@@ -3,7 +3,7 @@ import { getEntry } from "astro:content"
 
 import AuthorBadge from "@/components/AuthorBadge.astro"
 import TagList from "@/components/TagList.astro"
-import { formatDate, toDateAttr } from "@/lib/date"
+import { formatDate } from "@/lib/date"
 import { withBase } from "@/lib/path"
 import type { Post } from "@/lib/posts"
 
@@ -14,13 +14,13 @@ interface Props {
 const { post } = Astro.props
 const { title, description, pubDate, tags, draft } = post.data
 
-const author = await getEntry(post.data.author)
+const author = post.data.author ? await getEntry(post.data.author) : undefined
 const href = withBase(`posts/${post.id}/`)
 ---
 
 <article class="border-b border-foreground/10 py-6">
   <div class="flex flex-wrap items-center gap-3 text-sm text-foreground/60">
-    <time datetime={toDateAttr(pubDate)}>{formatDate(pubDate)}</time>
+    <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
     {author && <AuthorBadge {...author.data} />}
     {
       draft && (

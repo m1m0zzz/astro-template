@@ -18,8 +18,8 @@ const posts = defineCollection({
     /** true の記事は dev では見えるが、ビルド結果には含まれない */
     draft: z.boolean().default(false),
     tags: z.array(z.string()).default([]),
-    /** authors.json のキーを指定する */
-    author: reference("authors"),
+    /** authors.json のキーを指定する。省略すると著者を表示しない */
+    author: reference("authors").optional(),
   }),
 })
 

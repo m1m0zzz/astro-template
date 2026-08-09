@@ -12,7 +12,7 @@ import ShareButtons from "@/components/ShareButtons.astro"
 import TagList from "@/components/TagList.astro"
 import Toc from "@/components/Toc.astro"
 import Layout from "@/layouts/Layout.astro"
-import { formatDate, toDateAttr } from "@/lib/date"
+import { formatDate } from "@/lib/date"
 import { withBase } from "@/lib/path"
 import type { Post } from "@/lib/posts"
 
@@ -33,7 +33,7 @@ interface Props {
 const { post, headings, readingTime, prev, next } = Astro.props
 const { title, description, pubDate, updatedDate, tags, draft } = post.data
 
-const author = await getEntry(post.data.author)
+const author = post.data.author ? await getEntry(post.data.author) : undefined
 
 const url = new URL(Astro.url.pathname, Astro.site)
 const ogImage = new URL(withBase(`og/${post.id}.png`), Astro.site)
@@ -48,7 +48,7 @@ const ogImage = new URL(withBase(`og/${post.id}.png`), Astro.site)
   <div class="flex min-h-full flex-col bg-background text-foreground">
     <Header />
 
-    <main class="mx-auto w-full max-w-5xl flex-1 px-4 py-10">
+    <main class="mx-auto w-full max-w-7xl flex-1 px-4 py-10">
       <article>
         <header class="border-b border-foreground/10 pb-6">
           <h1 class="text-3xl font-bold sm:text-4xl">{title}</h1>
@@ -56,12 +56,12 @@ const ogImage = new URL(withBase(`og/${post.id}.png`), Astro.site)
           <div
             class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-foreground/60"
           >
-            <time datetime={toDateAttr(pubDate)}
+            <time datetime={pubDate.toISOString()}
               >{formatDate(pubDate)} 公開</time
             >
             {
               updatedDate && (
-                <time datetime={toDateAttr(updatedDate)}>
+                <time datetime={updatedDate.toISOString()}>
                   {formatDate(updatedDate)} 更新
                 </time>
               )
