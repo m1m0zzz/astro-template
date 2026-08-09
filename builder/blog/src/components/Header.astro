@@ -1,0 +1,39 @@
+---
+import { Rss } from "@lucide/astro"
+
+import ThemeIcon from "@/components/ThemeIcon.astro"
+import { SITE } from "@/config"
+import { withBase } from "@/lib/path"
+
+const links = [
+  { href: withBase("posts/"), label: "記事一覧" },
+  { href: withBase("tags/"), label: "タグ" },
+]
+---
+
+<header class="border-b border-foreground/10">
+  <nav
+    class="mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 px-4"
+  >
+    <a href={withBase()} class="text-lg font-bold hover:text-primary">
+      {SITE.name}
+    </a>
+    <div class="flex items-center gap-4">
+      {
+        links.map((link) => (
+          <a href={link.href} class="text-sm hover:text-primary">
+            {link.label}
+          </a>
+        ))
+      }
+      <a
+        href={withBase("rss.xml")}
+        class="hover:text-primary"
+        aria-label="RSS フィード"
+      >
+        <Rss aria-hidden="true" class="size-5" />
+      </a>
+      <ThemeIcon />
+    </div>
+  </nav>
+</header>

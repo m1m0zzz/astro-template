@@ -62,4 +62,14 @@ export default defineConfig([
       parser: typescriptParser,
     },
   },
+  {
+    // Modules that run in Node during the build: endpoints under src/pages and
+    // the helpers they pull in (OG image generation, font fetching, ...).
+    files: ["src/lib/**/*.ts", "src/pages/**/*.ts"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
 ])

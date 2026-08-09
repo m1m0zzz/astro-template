@@ -1,0 +1,32 @@
+---
+/**
+ * コードブロックにコピーボタンを付ける。ボタンの見た目は global.css の
+ * `.code-copy` 側にある。不要なら呼び出し側からこのコンポーネントを削除する。
+ */
+---
+
+<script>
+  const LABEL = "Copy"
+  const COPIED = "Copied!"
+
+  document.querySelectorAll<HTMLPreElement>("pre.astro-code").forEach((pre) => {
+    const button = document.createElement("button")
+    button.type = "button"
+    button.className = "code-copy"
+    button.textContent = LABEL
+    button.setAttribute("aria-label", "コードをコピー")
+
+    button.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(
+        pre.querySelector("code")?.textContent ?? "",
+      )
+
+      button.textContent = COPIED
+      setTimeout(() => {
+        button.textContent = LABEL
+      }, 1500)
+    })
+
+    pre.appendChild(button)
+  })
+</script>

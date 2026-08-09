@@ -1,0 +1,112 @@
+---
+import { Check, Link } from "@lucide/astro"
+
+/**
+ * SNS シェアボタン。ページの URL とタイトルを受け取るだけなので、
+ * 記事に限らずどのページでも使える。外部 SDK は読み込まず、素の
+ * シェア用 URL とクリップボード API だけで完結させている。
+ *
+ * 不要なら、呼び出し側からこのコンポーネントを削除するだけでよい。
+ */
+
+interface Props {
+  /** シェア対象の絶対 URL */
+  url: URL | string
+  /** シェア文に載せるタイトル */
+  title: string
+  class?: string
+}
+
+const { url, title, class: className } = Astro.props
+
+const href = url.toString()
+const encodedUrl = encodeURIComponent(href)
+const encodedTitle = encodeURIComponent(title)
+
+const links = [
+  {
+    name: "X",
+    href: `https://x.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+  },
+  {
+    name: "はてなブックマーク",
+    href: `https://b.hatena.ne.jp/entry/panel/?url=${encodedUrl}&title=${encodedTitle}`,
+  },
+  {
+    name: "Facebook",
+    href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+  },
+]
+
+const itemClass =
+  "flex size-9 items-center justify-center rounded-full border border-foreground/15 hover:border-primary hover:text-primary"
+---
+
+<div class={`flex items-center gap-2 ${className || ""}`}>
+  {
+    links.map((link) => (
+      <a
+        href={link.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class={itemClass}
+        aria-label={`${link.name} でシェア`}
+        title={`${link.name} でシェア`}
+      >
+        {link.name === "X" && (
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            class="size-4 fill-current"
+          >
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+        )}
+        {link.name === "はてなブックマーク" && (
+          <span class="text-sm font-bold" aria-hidden="true">
+            B!
+          </span>
+        )}
+        {link.name === "Facebook" && (
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            class="size-4 fill-current"
+          >
+            <path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c-3.02 0-4.87 1.83-4.87 5.2v2.42h2.8V24h3.36v-8.44h3.06z" />
+          </svg>
+        )}
+      </a>
+    ))
+  }
+  <button
+    type="button"
+    class={`share-copy cursor-pointer ${itemClass}`}
+    data-share-url={href}
+    aria-label="リンクをコピー"
+    title="リンクをコピー"
+  >
+    <Link aria-hidden="true" class="size-4" />
+    <Check aria-hidden="true" class="hidden size-4" />
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>(".share-copy").forEach((btn) => {
+    const [linkIcon, checkIcon] = btn.querySelectorAll("svg")
+
+    btn.addEventListener("click", async () => {
+      const url = btn.dataset.shareUrl
+      if (!url) return
+
+      await navigator.clipboard.writeText(url)
+
+      linkIcon.classList.add("hidden")
+      checkIcon.classList.remove("hidden")
+      setTimeout(() => {
+        linkIcon.classList.remove("hidden")
+        checkIcon.classList.add("hidden")
+      }, 1500)
+    })
+  })
+</script>

@@ -39,6 +39,8 @@ Task List is TODO
 - Tailwind CSS
 - AGENTS.md
 - OGP template
+- dark mode (theme toggle)
+- share buttons
 - ESLint + Prettier
 - husky + lint-staged
 - VSCode config
@@ -54,10 +56,12 @@ Task List is TODO
 #### [Blog](https://github.com/m1m0zzz/astro-template/tree/main/blog/)  \[[Demo](https://m1m0zzz.github.io/astro-template/blog/)\]
 
 - astro/sitemap
-- [ ] Content Collections
-- [ ] Blog Layout
-  - [ ] blog css
-  - [ ] ToC (Table of Content) Component
-- [ ] list page
-- [ ] author frontmatter (name,link,icon)
-- [ ] Dynamic OG Images
+- Content Collections (posts + authors)
+- Blog Layout
+  - blog css (`@tailwindcss/typography`)
+  - ToC (Table of Content) Component
+- list page (pagination, tag pages, RSS)
+- author frontmatter (name,link,icon)
+- Dynamic OG Images (satori + resvg, generated at build time)
+- reading time / share buttons / prev-next links
+- dark mode toggle

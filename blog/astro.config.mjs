@@ -14,6 +14,18 @@ export default defineConfig({
   },
   integrations: [sitemap()],
 
+  markdown: {
+    // ライト / ダークの 2 テーマ分を CSS 変数として同時に出力する。
+    // 切り替えは global.css の `[data-theme="dark"] .astro-code` 側で行う。
+    shikiConfig: {
+      themes: {
+        light: "github-light",
+        dark: "github-dark",
+      },
+      wrap: true,
+    },
+  },
+
   // TODO: Update these to your site's URL.
   //
   // このテンプレート自身は GitHub Pages のプロジェクトサイトとして

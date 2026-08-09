@@ -1,0 +1,21 @@
+---
+import { Clock } from "@lucide/astro"
+
+/**
+ * 読了時間。値は remark プラグイン（src/lib/remark-reading-time.mjs）が
+ * frontmatter に書き込んだものを渡す。不要なら呼び出し側から削除する。
+ */
+
+interface Props {
+  /** 分 */
+  minutes: number
+  class?: string
+}
+
+const { minutes, class: className } = Astro.props
+---
+
+<span class={`inline-flex items-center gap-1 ${className || ""}`}>
+  <Clock aria-hidden="true" class="size-4" />
+  約 {minutes} 分で読めます
+</span>

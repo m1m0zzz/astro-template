@@ -1,0 +1,54 @@
+---
+import { ArrowLeft, ArrowRight } from "@lucide/astro"
+
+import { withBase } from "@/lib/path"
+import type { Post } from "@/lib/posts"
+
+/**
+ * 前後の記事へのリンク。不要なら呼び出し側から削除する。
+ */
+
+interface Props {
+  /** 1 つ古い記事 */
+  prev?: Post
+  /** 1 つ新しい記事 */
+  next?: Post
+  class?: string
+}
+
+const { prev, next, class: className } = Astro.props
+
+const itemClass =
+  "flex flex-1 flex-col gap-1 rounded-lg border border-foreground/15 p-4 hover:border-primary"
+---
+
+{
+  (prev || next) && (
+    <nav
+      class={`flex flex-col gap-4 sm:flex-row ${className || ""}`}
+      aria-label="前後の記事"
+    >
+      {prev && (
+        <a href={withBase(`posts/${prev.id}/`)} class={itemClass}>
+          <span class="flex items-center gap-1 text-sm text-foreground/60">
+            <ArrowLeft aria-hidden="true" class="size-4" />
+            前の記事
+          </span>
+          <span class="font-bold">{prev.data.title}</span>
+        </a>
+      )}
+      {next && (
+        <a
+          href={withBase(`posts/${next.id}/`)}
+          class={`${itemClass} sm:items-end sm:text-right`}
+        >
+          <span class="flex items-center gap-1 text-sm text-foreground/60">
+            次の記事
+            <ArrowRight aria-hidden="true" class="size-4" />
+          </span>
+          <span class="font-bold">{next.data.title}</span>
+        </a>
+      )}
+    </nav>
+  )
+}

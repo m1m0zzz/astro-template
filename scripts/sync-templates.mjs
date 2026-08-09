@@ -12,6 +12,11 @@
 //      `npm run sync -- --watch`    rebuild on changes under builder/
 //      `node scripts/sync-templates.mjs --reverse`
 //                                   copy formatted output back into builder/
+//      `node scripts/sync-templates.mjs --reverse --watch --template blog`
+//                                   watch blog/ and copy each change back into
+//                                   builder/ as it happens (used by `dev:blog`)
+//
+// `--template <name>` limits any of the above to a single template.
 //
 // Idempotent: each template dir is cleaned (except the generated/ignored dirs
 // below) and rebuilt from scratch.
@@ -23,11 +28,12 @@ import {
   lstatSync,
   mkdirSync,
   readdirSync,
+  readFileSync,
   rmSync,
   symlinkSync,
   watch,
 } from 'node:fs';
-import { dirname, join, relative } from 'node:path';
+import { dirname, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -42,6 +48,24 @@ const PRESERVE = new Set(['node_modules', '.astro', 'dist']);
 // Format: [target, linkName] -> `linkName` points to `target` (same directory).
 const SYMLINKS = [['AGENTS.md', 'CLAUDE.md']];
 
+const args = process.argv.slice(2);
+
+function hasFlag(name) {
+  return args.includes(`--${name}`);
+}
+
+// Supports both `--template blog` and `--template=blog`.
+function flagValue(name) {
+  const index = args.indexOf(`--${name}`);
+  if (index !== -1) {
+    const next = args[index + 1];
+    if (next && !next.startsWith('--')) return next;
+  }
+  const inline = args.find((arg) => arg.startsWith(`--${name}=`));
+  return inline ? inline.slice(name.length + 3) : undefined;
+}
+
+// The template named by `--template`, or every template under builder/.
 function getTemplates() {
   const templates = readdirSync(builderDir, { withFileTypes: true })
     .filter((e) => e.isDirectory() && e.name !== 'shared')
@@ -51,7 +75,17 @@ function getTemplates() {
     console.error('No templates found under builder/.');
     process.exit(1);
   }
-  return templates;
+
+  const only = flagValue('template');
+  if (!only) return templates;
+
+  if (!templates.includes(only)) {
+    console.error(
+      `Unknown template "${only}". Available: ${templates.join(', ')}`,
+    );
+    process.exit(1);
+  }
+  return [only];
 }
 
 function cleanTemplateDir(outDir) {
@@ -132,26 +166,109 @@ function sync() {
   }
 }
 
-if (process.argv.includes('--reverse')) {
-  syncBack();
-  process.exit(0);
+function isPreserved(rel) {
+  return rel.split(sep).some((segment) => PRESERVE.has(segment));
 }
 
-sync();
+// Where a file living at `<name>/<rel>` came from: the template-specific copy
+// when there is one, otherwise shared. A file that exists in neither is new, and
+// is treated as template-specific -- promoting it to shared would silently hand
+// it to the other templates.
+function builderTargetFor(name, rel) {
+  const templateTarget = join(builderDir, name, rel);
+  if (existsSync(templateTarget)) return templateTarget;
 
-if (process.argv.includes('--watch')) {
-  console.log(`watching ${builderDir} for changes...`);
+  const sharedTarget = join(sharedDir, rel);
+  if (existsSync(sharedTarget)) return sharedTarget;
+
+  return templateTarget;
+}
+
+function copyBackOne(name, rel) {
+  const src = join(root, name, rel);
+
+  if (!existsSync(src)) {
+    console.warn(
+      `deleted: ${name}/${rel} -- remove it under builder/ yourself (deletions are not mirrored)`,
+    );
+    return;
+  }
+
+  const stat = lstatSync(src);
+  if (stat.isSymbolicLink() || stat.isDirectory()) return;
+
+  const target = builderTargetFor(name, rel);
+  const content = readFileSync(src);
+  if (existsSync(target) && readFileSync(target).equals(content)) return;
+
+  mkdirSync(dirname(target), { recursive: true });
+  copyFileSync(src, target);
+  console.log(`synced back: ${relative(root, target)}`);
+}
+
+// Watch a generated template directory and mirror every change back into
+// builder/. Only this direction is watched, so there is no feedback loop with
+// the forward `--watch` mode.
+function watchReverse(name) {
+  const outDir = join(root, name);
+  if (!existsSync(outDir)) {
+    console.error(`${name}/ does not exist. Run \`npm run sync\` first.`);
+    process.exit(1);
+  }
+
+  console.log(`watching ${outDir} for changes -> builder/`);
+
+  const pending = new Set();
   let timer = null;
-  // Debounce: editors emit bursts of events for a single save.
-  watch(builderDir, { recursive: true }, (_event, filename) => {
+
+  watch(outDir, { recursive: true }, (_event, filename) => {
+    if (!filename) return;
+
+    const rel = filename.toString();
+    if (isPreserved(rel)) return;
+
+    pending.add(rel);
+
+    // Debounce: editors emit bursts of events for a single save.
     if (timer) clearTimeout(timer);
     timer = setTimeout(() => {
-      console.log(`change: ${filename ?? '(unknown)'} -> resyncing`);
-      try {
-        sync();
-      } catch (err) {
-        console.error(err);
+      const changed = [...pending];
+      pending.clear();
+      for (const entry of changed) {
+        try {
+          copyBackOne(name, entry);
+        } catch (err) {
+          console.error(err);
+        }
       }
     }, 100);
   });
+}
+
+if (hasFlag('reverse')) {
+  if (hasFlag('watch')) {
+    for (const name of getTemplates()) watchReverse(name);
+  } else {
+    syncBack();
+    process.exit(0);
+  }
+} else {
+  sync();
+
+  if (hasFlag('watch')) {
+    console.log(`watching ${builderDir} for changes...`);
+    let timer = null;
+    // Debounce: editors emit bursts of events for a single save.
+    watch(builderDir, { recursive: true }, (_event, filename) => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        console.log(`change: ${filename ?? '(unknown)'} -> resyncing`);
+        try {
+          sync();
+        } catch (err) {
+          console.error(err);
+        }
+      }, 100);
+    });
+  }
 }
