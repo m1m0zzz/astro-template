@@ -9,33 +9,31 @@ interface Props {
 }
 
 const { name, link, icon, class: className } = Astro.props
+
+// link があればアイコンと名前をまとめてリンクにする
+const Tag = link ? "a" : "span"
+const linkProps = link
+  ? { href: link, target: "_blank", rel: "noopener noreferrer author" }
+  : {}
 ---
 
-<address class={`flex items-center gap-2 not-italic ${className || ""}`}>
-  {
-    icon && (
-      <img
-        src={icon}
-        alt=""
-        width="24"
-        height="24"
-        loading="lazy"
-        class="size-6 rounded-full"
-      />
-    )
-  }
-  {
-    link ? (
-      <a
-        href={link}
-        target="_blank"
-        rel="noopener noreferrer author"
-        class="hover:text-primary"
-      >
-        {name}
-      </a>
-    ) : (
-      <span>{name}</span>
-    )
-  }
+<address class={`not-italic ${className || ""}`}>
+  <Tag
+    {...linkProps}
+    class={`flex items-center gap-2 ${link ? "hover:text-primary" : ""}`}
+  >
+    {
+      icon && (
+        <img
+          src={icon}
+          alt=""
+          width="24"
+          height="24"
+          loading="lazy"
+          class="size-6 rounded-full"
+        />
+      )
+    }
+    <span>{name}</span>
+  </Tag>
 </address>

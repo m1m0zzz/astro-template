@@ -60,6 +60,32 @@ html {
 }
 
 /*
+ * インラインコード。@tailwindcss/typography は既定で ::before / ::after に
+ * バッククォートを入れるので消して、背景色付きのバッジにする。
+ * コードブロック（pre 内）は Shiki の配色をそのまま使うので対象外。
+ */
+.prose :where(code):not(:where(pre code, [class~="not-prose"] *)) {
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+  background-color: color-mix(in srgb, currentColor 8%, transparent);
+  font-weight: 400;
+}
+
+.prose :where(code):not(:where(pre code, [class~="not-prose"] *))::before,
+.prose :where(code):not(:where(pre code, [class~="not-prose"] *))::after {
+  content: none;
+}
+
+/*
+ * コードブロックの背景（ライト）。github-light は白を返してくるので、
+ * Shiki がインラインスタイルで書いた値を上書きする。
+ * ダークは下の `--shiki-dark-bg` 側が specificity で勝つ。
+ */
+.astro-code {
+  background-color: #f6f8fa !important;
+}
+
+/*
  * Shiki のデュアルテーマ。
  * astro.config.mjs で light / dark の 2 テーマを指定すると、ダーク側の色は
  * `--shiki-dark*` という CSS 変数として出力される。既定では

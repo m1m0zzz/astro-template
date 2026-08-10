@@ -19,13 +19,19 @@ interface Props {
 const { prev, next, class: className } = Astro.props
 
 const itemClass =
-  "flex flex-1 flex-col gap-1 rounded-lg border border-foreground/15 p-4 hover:border-primary"
+  "flex flex-col gap-1 rounded-lg border border-foreground/15 p-4 hover:border-primary"
 ---
 
 {
+  /*
+   * 2 カラムのグリッド。片方しか無くても列幅は変わらないので、
+   * 「次の記事」だけのときも右半分に収まる（狭い画面では 1 カラムで全幅）。
+   */
+}
+{
   (prev || next) && (
     <nav
-      class={`flex flex-col gap-4 sm:flex-row ${className || ""}`}
+      class={`grid gap-4 sm:grid-cols-2 ${className || ""}`}
       aria-label="前後の記事"
     >
       {prev && (
@@ -40,7 +46,7 @@ const itemClass =
       {next && (
         <a
           href={withBase(`posts/${next.id}/`)}
-          class={`${itemClass} sm:items-end sm:text-right`}
+          class={`${itemClass} sm:col-start-2 sm:items-end sm:text-right`}
         >
           <span class="flex items-center gap-1 text-sm text-foreground/60">
             次の記事

@@ -30,7 +30,7 @@ const { page, tag } = Astro.props as { page: Page<Post>; tag: string }
   <div class="flex min-h-full flex-col bg-background text-foreground">
     <Header />
 
-    <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-10">
+    <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
       <h1 class="text-3xl font-bold">#{tag}</h1>
       <p class="mt-2 text-sm text-foreground/60">
         全 {page.total} 件（{page.currentPage} / {page.lastPage} ページ）・

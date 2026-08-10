@@ -7,11 +7,14 @@ import PostCard from "@/components/PostCard.astro"
 import { BLOG, SITE } from "@/config"
 import Layout from "@/layouts/Layout.astro"
 import { withBase } from "@/lib/path"
-import { getAllTags, getPosts } from "@/lib/posts"
+import { getPosts } from "@/lib/posts"
 
 const posts = await getPosts()
 const recent = posts.slice(0, BLOG.recentPostsOnTop)
-const tags = getAllTags(posts).slice(0, 8)
+
+// 下のタグ一覧を使うときは次の 2 行を戻す
+// import { getAllTags } from "@/lib/posts"
+// const tags = getAllTags(posts).slice(0, 8)
 
 const ogImage = new URL(withBase("og/default.png"), Astro.site)
 ---
@@ -20,12 +23,12 @@ const ogImage = new URL(withBase("og/default.png"), Astro.site)
   <div class="flex min-h-full flex-col bg-background text-foreground">
     <Header />
 
-    <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-10">
+    <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
       <section>
         <h1 class="text-4xl font-bold">{SITE.name}</h1>
-        <p class="mt-3 text-foreground/70">{SITE.description}</p>
+        <!-- <p class="mt-3 text-foreground/70">{SITE.description}</p> -->
 
-        <ul class="mt-5 flex flex-wrap gap-2">
+        <!-- <ul class="mt-5 flex flex-wrap gap-2">
           {
             tags.map(({ tag }) => (
               <li>
@@ -38,7 +41,7 @@ const ogImage = new URL(withBase("og/default.png"), Astro.site)
               </li>
             ))
           }
-        </ul>
+        </ul> -->
       </section>
 
       <section class="mt-12">
