@@ -97,7 +97,7 @@ npm run lint         # 全ワークスペースをリント
 npm run format       # 全ワークスペースをフォーマット
 npm run check        # lint + format を実行
 npm run build:pages  # GitHub Pages 用に _site/ を組み立てる（先に build が必要）
-npm run preview      # Pages の出力をローカル配信する
+npm run preview      # _site/ をローカル配信する（ビルドはしない）
 ```
 
 ## GitHub Pages
@@ -106,10 +106,22 @@ npm run preview      # Pages の出力をローカル配信する
 `https://m1m0zzz.github.io/astro-template/` に公開する。
 `README.md` がトップページになり、各テンプレートは `/lp/`, `/blog/` に配置される。
 
+ローカル確認は次の順で行う。
+
+```sh
+npm run build        # 各テンプレートの dist/
+npm run build:pages  # _site/ を組み立てる
+npm run preview      # _site/ を配信する
+```
+
+`npm run preview` は **ビルドしない**（`vite preview` / `astro preview` と同じ）。
+`_site/` が無ければエラーで止まるので、先に `build:pages` を実行すること。
+
 出力の全パスは `base`（`/astro-template/<name>`）付きの絶対パスなので、
 静的サーバーはその階層の下でサイトを見る必要がある。`npm run preview` は
-`_preview/astro-template/` に組み立ててから `_preview/` を配信することで、
-本番と同じ URL を再現している。開いた後のトップは
+`_preview/astro-template` を `_site/` へのシンボリックリンクにして `_preview/` を
+配信することで、コピーもビルドもせずに本番と同じ URL を再現している
+（`serve --symlinks` が必要）。開いた後のトップは
 `http://localhost:4321/astro-template/`。
 
 テンプレート内のリンクとアセット参照は `src/lib/path.ts` の `withBase()` を通すこと。

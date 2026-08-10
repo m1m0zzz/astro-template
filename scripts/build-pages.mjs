@@ -10,7 +10,8 @@
 //
 // Run: `npm run build && npm run build:pages`
 //      `node scripts/build-pages.mjs [outDir]`   (default: _site/)
-//      `node scripts/build-pages.mjs --preview`  (_preview/<base>/, see below)
+//
+// Serving the result locally is `npm run preview` (scripts/preview.mjs).
 
 import {
   copyFileSync,
@@ -33,17 +34,16 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 // `base` in each template's astro.config.mjs, minus the template name.
 const BASE = '/astro-template/';
 
-// Every path in the output is absolute and rooted at BASE, so a plain static
-// server must see the site nested under that path. `--preview` builds into
-// `_preview/<base>/` and `npm run preview` serves `_preview/`, which reproduces
-// the deployed URLs exactly instead of relying on server rewrite rules.
-const args = process.argv.slice(2);
-const preview = args.includes('--preview');
+// Where the README's relative links point once they leave GitHub.
+const REPO_TREE = 'https://github.com/m1m0zzz/astro-template/tree/main/';
 
-const previewRoot = join(root, '_preview');
-const outDir = preview
-  ? join(previewRoot, ...BASE.split('/').filter(Boolean))
-  : (args.find((a) => !a.startsWith('-')) ?? join(root, '_site'));
+// The deployed URL as written in the README. Rewritten to a site-relative path
+// so the demo links stay inside whatever is being served -- including
+// `npm run preview`, which would otherwise jump to the published site.
+const SITE_URL = `https://m1m0zzz.github.io${BASE}`;
+
+const args = process.argv.slice(2);
+const outDir = args.find((a) => !a.startsWith('-')) ?? join(root, '_site');
 
 // Same discovery rule as scripts/sync-templates.mjs, so a new template needs no
 // change here.
@@ -59,12 +59,13 @@ function buildIndex() {
   // The README's first h1 doubles as the page title.
   const title = readme.match(/^#\s+(.+)$/m)?.[1] ?? 'Astro Templates';
 
-  // README links are relative so they work on GitHub (`./lp/`). On the deployed
-  // page they must be rooted at the base, otherwise they break whenever the
-  // index is reached without a trailing slash.
+  // The README is written for GitHub: relative links point at the sources in the
+  // repository, and the demo links are absolute. Rewrite both for the generated
+  // page.
   const body = marked
     .parse(readme, { async: false })
-    .replace(/href="\.\/([^"]*)"/g, (_, path) => `href="${BASE}${path}"`)
+    .replace(/href="\.\/([^"]*)"/g, (_, path) => `href="${REPO_TREE}${path}"`)
+    .replaceAll(SITE_URL, BASE)
     // Tables are the one block that can outgrow the column, so let them scroll
     // on their own instead of the page.
     .replace(/<table>/g, '<div class="table-wrap"><table>')
@@ -73,7 +74,7 @@ function buildIndex() {
   writeFileSync(
     join(outDir, 'index.html'),
     `<!doctype html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -189,7 +190,3 @@ for (const name of getTemplates()) {
 }
 
 console.log(`built: ${outDir}`);
-
-if (preview) {
-  console.log(`\nserve ${previewRoot}, then open http://localhost:4321${BASE}`);
-}
