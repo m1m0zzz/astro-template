@@ -1,5 +1,7 @@
 ---
 import GoogleAnalytics from "@/components/GoogleAnalytics.astro"
+import ThemeScript from "@/components/ThemeScript.astro"
+import { SITE } from "@/config"
 import { withBase } from "@/lib/path"
 
 import "@/styles/global.css"
@@ -7,35 +9,35 @@ import "@/styles/global.css"
 interface Props {
   title?: string
   description?: string
+  /** OGP 画像の絶対 URL。渡さなければ og:image を出力しない */
+  ogImage?: URL | string
+  /** 記事ページは "article" にする */
+  ogType?: "website" | "article"
 }
 
-const { title: _title, description: _description } = Astro.props
+const {
+  title: _title,
+  description: _description,
+  ogImage,
+  ogType = "website",
+} = Astro.props
 
-const siteName = "SITE NAME" // TODO
-const title = _title ? `${_title} | ${siteName}` : siteName
-const description = _description || "SITE DESCRIPTION" // TODO
-const twitterID = "@xxxxxx" // TODO
+const title = _title ? `${_title} | ${SITE.name}` : SITE.name
+const description = _description || SITE.description
 
 // テスト環境などで noindex にしたい場合、NO_INDEX=1 を渡す
 const noIndex = import.meta.env.NO_INDEX === "1"
 
 // 現在のページの絶対 URL。`Astro.url.pathname` は base を含む
 const ogUrl = new URL(Astro.url.pathname, Astro.site)
-
-// TODO: OGP.png をpublicフォルダに配置
-// public/OGP.png（1200×630）
-// const ogImage = {
-//   url: new URL(withBase("OGP.png"), Astro.site),
-//   width: "1200",
-//   height: "630",
-// }
 ---
 
 <!doctype html>
-<html lang="ja">
+<html lang={SITE.lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <ThemeScript />
     <link rel="sitemap" href={withBase("sitemap-index.xml")} />
     <link rel="icon" href={withBase("favicon.ico")} sizes="32x32" />
     <link rel="icon" href={withBase("favicon.svg")} type="image/svg+xml" />
@@ -53,22 +55,27 @@ const ogUrl = new URL(Astro.url.pathname, Astro.site)
       rel="stylesheet"
     />
 
-    <!-- TODO: Set the ID, or delete the line below if Google Analytics is not required. -->
+    <!-- TODO: ID を設定する。Google Analytics が不要なら下の行ごと削除する。 -->
     <GoogleAnalytics id="G-XXXXXXXXXX" />
 
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:url" content={ogUrl} />
-    <!-- TODO: OGP.png をpublicフォルダに配置 -->
-    <!-- <meta property="og:image" content={ogImage.url} />
-    <meta property="og:image:width" content={ogImage.width} />
-    <meta property="og:image:height" content={ogImage.height} /> -->
-    <meta property="og:site_name" content={siteName} />
+    {
+      ogImage && (
+        <>
+          <meta property="og:image" content={ogImage.toString()} />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+        </>
+      )
+    }
+    <meta property="og:site_name" content={SITE.name} />
     <meta property="og:description" content={description} />
-    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:locale" content={SITE.locale} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content={twitterID} />
+    <meta name="twitter:site" content={SITE.twitterID} />
   </head>
   <body>
     <slot />

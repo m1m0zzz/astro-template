@@ -1,0 +1,29 @@
+---
+/**
+ * テーマ（light / dark）を描画前に適用する。
+ *
+ * `<head>` の中で読み込むこと。body 側で実行すると、一瞬ライトテーマが
+ * 見えてから切り替わる（FOUC）。
+ *
+ * 明示的に選択されたテーマだけを localStorage に保存する（保存は
+ * ThemeIcon のトグル側の役目）。初回訪問時に OS の設定を書き込んでしまうと、
+ * 以降 OS 側の変更に追従しなくなるため、ここでは読むだけにしている。
+ */
+---
+
+<script is:inline>
+  ;(() => {
+    const stored = localStorage?.getItem("theme") ?? ""
+    const theme = ["dark", "light"].includes(stored)
+      ? stored
+      : window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
+
+    if (theme === "dark") {
+      document.documentElement.setAttribute("data-theme", "dark")
+    } else {
+      document.documentElement.removeAttribute("data-theme")
+    }
+  })()
+</script>

@@ -14,12 +14,23 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  color-scheme: light;
+
   --c-foreground: #222222;
   --c-background: #ffffff;
   --c-primary: #f9881e;
 
   color: var(--c-foreground);
   background-color: var(--c-background);
+}
+
+/* ダークテーマ。`data-theme` は ThemeScript.astro が <head> で付与する */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --c-foreground: #e6e6e6;
+  --c-background: #1b1b1f;
+  --c-primary: #ffa04a;
 }
 
 @theme {

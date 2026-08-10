@@ -1,0 +1,43 @@
+---
+import Footer from "@/components/Footer.astro"
+import Header from "@/components/Header.astro"
+import Layout from "@/layouts/Layout.astro"
+import { withBase } from "@/lib/path"
+import { getAllTags, getPosts } from "@/lib/posts"
+
+const tags = getAllTags(await getPosts())
+---
+
+<Layout title="タグ">
+  <div class="flex min-h-full flex-col bg-background text-foreground">
+    <Header />
+
+    <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
+      <h1 class="text-3xl font-bold">タグ</h1>
+
+      <ul class="mt-6 flex flex-wrap gap-3">
+        {
+          tags.map(({ tag, count }) => (
+            <li>
+              <a
+                href={withBase(`tags/${encodeURIComponent(tag)}/`)}
+                class="inline-flex items-center gap-2 rounded-full border border-foreground/15 px-4 py-1 hover:border-primary hover:text-primary"
+              >
+                #{tag}
+                <span class="text-sm text-foreground/60">{count}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      {
+        tags.length === 0 && (
+          <p class="mt-6 text-foreground/60">タグはまだありません。</p>
+        )
+      }
+    </main>
+
+    <Footer />
+  </div>
+</Layout>

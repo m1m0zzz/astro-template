@@ -12,19 +12,23 @@
     "lp"
   ],
   "scripts": {
+    "dev": "npm run sync && concurrently -k -n sync,blog,lp -c gray,magenta,cyan \"node scripts/sync-templates.mjs --reverse --watch\" \"npm run dev -w @astro-template/blog -- --port 4321\" \"npm run dev -w @astro-template/lp -- --port 4322\"",
+    "dev:blog": "npm run sync -- --template blog && concurrently -k -n sync,astro -c gray,magenta \"node scripts/sync-templates.mjs --template blog --reverse --watch\" \"npm run dev -w @astro-template/blog\"",
+    "dev:lp": "npm run sync -- --template lp && concurrently -k -n sync,astro -c gray,magenta \"node scripts/sync-templates.mjs --template lp --reverse --watch\" \"npm run dev -w @astro-template/lp\"",
     "sync": "node scripts/sync-templates.mjs",
     "sync:strict": "node scripts/sync-templates.mjs && npm run check && node scripts/sync-templates.mjs --reverse",
     "sync:watch": "node scripts/sync-templates.mjs --watch",
     "sync:reverse": "node scripts/sync-templates.mjs --reverse",
     "build": "npm run build --workspaces --if-present",
     "build:pages": "node scripts/build-pages.mjs",
-    "preview": "node scripts/build-pages.mjs --preview && serve _preview -l 4321",
+    "preview": "node scripts/preview.mjs && serve _preview -l 4321 --symlinks",
     "lint": "npm run lint --workspaces --if-present",
     "format": "npm run format --workspaces --if-present",
     "check": "npm run check --workspaces --if-present",
     "prepare": "husky"
   },
   "devDependencies": {
+    "concurrently": "10.0.4",
     "husky": "9.1.7",
     "marked": "18.0.9",
     "serve": "14.2.6"

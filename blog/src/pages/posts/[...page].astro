@@ -1,0 +1,45 @@
+---
+import type { GetStaticPaths, Page } from "astro"
+
+import Footer from "@/components/Footer.astro"
+import Header from "@/components/Header.astro"
+import Pagination from "@/components/Pagination.astro"
+import PostCard from "@/components/PostCard.astro"
+import { BLOG } from "@/config"
+import Layout from "@/layouts/Layout.astro"
+import { withBase } from "@/lib/path"
+import { getPosts, type Post } from "@/lib/posts"
+
+/**
+ * 記事一覧。1 ページ目が `/posts/`、2 ページ目以降が `/posts/2/` になる。
+ * 記事ページは `[slug].astro` が `/posts/<slug>/` を生成するため、
+ * 数字だけの slug を付けるとページ番号と衝突する点に注意。
+ */
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const posts = await getPosts()
+  return paginate(posts, { pageSize: BLOG.postsPerPage })
+}
+
+const { page } = Astro.props as { page: Page<Post> }
+---
+
+<Layout title="記事一覧">
+  <div class="flex min-h-full flex-col bg-background text-foreground">
+    <Header />
+
+    <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
+      <h1 class="text-3xl font-bold">記事一覧</h1>
+      <p class="mt-2 text-sm text-foreground/60">
+        全 {page.total} 件（{page.currentPage} / {page.lastPage} ページ）
+      </p>
+
+      <div class="mt-6">
+        {page.data.map((post) => <PostCard post={post} />)}
+      </div>
+
+      <Pagination page={page} basePath={withBase("posts/")} class="mt-8" />
+    </main>
+
+    <Footer />
+  </div>
+</Layout>

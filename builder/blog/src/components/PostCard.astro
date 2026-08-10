@@ -1,0 +1,45 @@
+---
+import { getEntry } from "astro:content"
+
+import AuthorBadge from "@/components/AuthorBadge.astro"
+import TagList from "@/components/TagList.astro"
+import { formatDate } from "@/lib/date"
+import { withBase } from "@/lib/path"
+import type { Post } from "@/lib/posts"
+
+interface Props {
+  post: Post
+}
+
+const { post } = Astro.props
+const { title, description, pubDate, tags, draft } = post.data
+
+const author = post.data.author ? await getEntry(post.data.author) : undefined
+const href = withBase(`posts/${post.id}/`)
+---
+
+<article class="border-b border-foreground/10 py-6">
+  <div class="flex flex-wrap items-center gap-3 text-sm text-foreground/60">
+    <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+    {author && <AuthorBadge {...author.data} />}
+    {
+      draft && (
+        <span class="rounded bg-primary/15 px-2 py-0.5 text-primary">
+          下書き
+        </span>
+      )
+    }
+  </div>
+
+  <a href={href} class="group hover:text-primary">
+    <h2 class="mt-2 text-xl font-bold">
+      {title}
+    </h2>
+
+    <p class="mt-2 text-foreground/80">
+      {description}
+    </p>
+  </a>
+
+  <TagList tags={tags} class="mt-3" />
+</article>

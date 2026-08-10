@@ -1,52 +1,51 @@
 # mimoz's Astro Starter Kit: LP
 
+[English](./README.en.md)
+
 ```sh
 npm create astro@latest -- --template m1m0zzz/astro-template/lp
 ```
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
 
 ## ✨ Features
 
 - Tailwind CSS
 - astro/sitemap
-- OGP template
+- OGP テンプレート
 - ESLint + Prettier
 - husky + lint-staged
-- VSCode config
+- VSCode 設定
 
-## 🧞 Commands
+## 🧞 コマンド
 
-All commands are run from the root of the project, from a terminal:
+すべてプロジェクトのルートで実行します。
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+| コマンド                  | 内容                                               |
+| :------------------------ | :------------------------------------------------- |
+| `npm install`             | 依存関係をインストールする                         |
+| `npm run dev`             | `localhost:4321` で開発サーバーを起動する          |
+| `npm run build`           | 本番用サイトを `./dist/` にビルドする              |
+| `npm run preview`         | デプロイ前にビルド結果をローカルで確認する         |
+| `npm run astro ...`       | `astro add` や `astro check` などの CLI を実行する |
+| `npm run astro -- --help` | Astro CLI のヘルプを表示する                       |
 
-## 🌐 Deploying to a subdirectory
+## 🌐 サブディレクトリへのデプロイ
 
-`astro.config.mjs` ships with the values this repository uses for its own demo:
+`astro.config.mjs` には、このリポジトリのデモ用の値が入っています。
 
 ```js
 site: "https://m1m0zzz.github.io",
 base: "/astro-template/lp/",
 ```
 
-- **Serving from the root of a domain** — delete `base` and set `site` to your URL.
-- **Serving from a subdirectory** (GitHub Pages project sites, etc.) — keep only
-  the origin in `site` and put the subpath in `base`. `@astrojs/sitemap` joins the
-  two, so a `site` that already contains the subpath would double it.
-- **Keep the trailing slash on `base`** — `@astrojs/sitemap` builds its URLs from
-  both the built pages and the route definitions, and only the former uses `base`
-  verbatim. Without the trailing slash the two disagree on the home page and it
-  is listed twice.
+- **ドメイン直下で配信する場合** — `base` を削除し、`site` に自分の URL を設定する。
+- **サブディレクトリで配信する場合**（GitHub Pages のプロジェクトサイトなど） —
+  `site` にはオリジンだけを書き、サブパスは `base` に入れる。`@astrojs/sitemap` が
+  両者を結合するため、`site` にサブパスを含めると二重になる。
+- **`base` の末尾スラッシュは省略しない** — `@astrojs/sitemap` はビルドされたページと
+  ルート定義の 2 系統から URL を組み立てており、`base` をそのまま使うのは前者だけ。
+  末尾スラッシュが無いとトップページだけ両者の表記が食い違い、二重に出力される。
 
-Internal links and asset paths must go through `withBase()` from `src/lib/path.ts`:
+サイト内のリンクとアセットのパスは、`src/lib/path.ts` の `withBase()` を通してください。
 
 ```astro
 ---
@@ -57,9 +56,10 @@ import { withBase } from "@/lib/path"
 <link rel="icon" href={withBase("favicon.svg")} />
 ```
 
-A root-relative path such as `href="/favicon.svg"` ignores `base` and breaks as
-soon as the site is not served from the root.
+`href="/favicon.svg"` のようなルート相対パスは `base` を無視するため、ルート以外で
+配信した時点で壊れます。
 
-## 👀 Want to learn more?
+## 👀 もっと知りたい場合
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+[Astro のドキュメント](https://docs.astro.build)や
+[Discord サーバー](https://astro.build/chat)をどうぞ。

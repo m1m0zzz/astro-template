@@ -1,0 +1,27 @@
+---
+import { withBase } from "@/lib/path"
+
+interface Props {
+  tags: string[]
+  class?: string
+}
+
+const { tags, class: className } = Astro.props
+---
+
+{
+  tags.length > 0 && (
+    <ul class={`flex flex-wrap gap-2 ${className || ""}`}>
+      {tags.map((tag) => (
+        <li>
+          <a
+            href={withBase(`tags/${encodeURIComponent(tag)}/`)}
+            class="inline-block rounded-full border border-foreground/15 px-3 py-0.5 text-sm hover:border-primary hover:text-primary"
+          >
+            #{tag}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}

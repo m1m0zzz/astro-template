@@ -1,0 +1,53 @@
+---
+import type { GetStaticPaths, Page } from "astro"
+
+import Footer from "@/components/Footer.astro"
+import Header from "@/components/Header.astro"
+import Pagination from "@/components/Pagination.astro"
+import PostCard from "@/components/PostCard.astro"
+import { BLOG } from "@/config"
+import Layout from "@/layouts/Layout.astro"
+import { withBase } from "@/lib/path"
+import { filterByTag, getAllTags, getPosts, type Post } from "@/lib/posts"
+
+/** タグ別の記事一覧。`/tags/<tag>/`、2 ページ目以降は `/tags/<tag>/2/` */
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const posts = await getPosts()
+
+  return getAllTags(posts).flatMap(({ tag }) =>
+    paginate(filterByTag(posts, tag), {
+      params: { tag },
+      props: { tag },
+      pageSize: BLOG.postsPerPage,
+    }),
+  )
+}
+
+const { page, tag } = Astro.props as { page: Page<Post>; tag: string }
+---
+
+<Layout title={`#${tag} の記事`}>
+  <div class="flex min-h-full flex-col bg-background text-foreground">
+    <Header />
+
+    <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
+      <h1 class="text-3xl font-bold">#{tag}</h1>
+      <p class="mt-2 text-sm text-foreground/60">
+        全 {page.total} 件（{page.currentPage} / {page.lastPage} ページ）・
+        <a href={withBase("tags/")} class="hover:text-primary">タグ一覧へ</a>
+      </p>
+
+      <div class="mt-6">
+        {page.data.map((post) => <PostCard post={post} />)}
+      </div>
+
+      <Pagination
+        page={page}
+        basePath={withBase(`tags/${encodeURIComponent(tag)}/`)}
+        class="mt-8"
+      />
+    </main>
+
+    <Footer />
+  </div>
+</Layout>

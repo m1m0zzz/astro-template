@@ -1,48 +1,75 @@
 ---
-import { ExternalLink } from "@lucide/astro"
+import { ArrowRight } from "@lucide/astro"
 
+import Footer from "@/components/Footer.astro"
+import Header from "@/components/Header.astro"
+import PostCard from "@/components/PostCard.astro"
+import { BLOG, SITE } from "@/config"
 import Layout from "@/layouts/Layout.astro"
 import { withBase } from "@/lib/path"
+import { getPosts } from "@/lib/posts"
 
-import astroLogo from "../assets/astro.svg"
+const posts = await getPosts()
+const recent = posts.slice(0, BLOG.recentPostsOnTop)
+
+// 下のタグ一覧を使うときは次の 2 行を戻す
+// import { getAllTags } from "@/lib/posts"
+// const tags = getAllTags(posts).slice(0, 8)
+
+const ogImage = new URL(withBase("og/default.png"), Astro.site)
 ---
 
-<Layout>
-  <div
-    class="grid min-h-full grid-rows-[auto_1fr_auto] bg-background text-foreground"
-  >
-    <nav class="flex h-15 items-center justify-between bg-neutral-200 px-4">
-      <div>
-        <a href={withBase()}
-          ><img
-            src={astroLogo.src}
-            width="115"
-            height="48"
-            alt="Astro Homepage"
-          /></a
+<Layout ogImage={ogImage}>
+  <div class="flex min-h-full flex-col bg-background text-foreground">
+    <Header />
+
+    <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
+      <section>
+        <h1 class="text-4xl font-bold">{SITE.name}</h1>
+        <!-- <p class="mt-3 text-foreground/70">{SITE.description}</p> -->
+
+        <!-- <ul class="mt-5 flex flex-wrap gap-2">
+          {
+            tags.map(({ tag }) => (
+              <li>
+                <a
+                  href={withBase(`tags/${encodeURIComponent(tag)}/`)}
+                  class="inline-block rounded-full border border-foreground/15 px-3 py-0.5 text-sm hover:border-primary hover:text-primary"
+                >
+                  #{tag}
+                </a>
+              </li>
+            ))
+          }
+        </ul> -->
+      </section>
+
+      <section class="mt-12">
+        <h2 class="text-xl font-bold">最新の記事</h2>
+
+        <div class="mt-4">
+          {recent.map((post) => <PostCard post={post} />)}
+        </div>
+
+        {
+          posts.length === 0 && (
+            <p class="mt-4 text-foreground/60">
+              記事はまだありません。<code>src/content/posts/</code> に Markdown
+              を追加してください。
+            </p>
+          )
+        }
+
+        <a
+          href={withBase("posts/")}
+          class="mt-6 inline-flex items-center gap-1 font-bold hover:text-primary"
         >
-      </div>
-      <a
-        href="https://github.com/"
-        target="_blank"
-        class="flex items-center justify-center gap-1"
-      >
-        <span> GitHub </span>
-        <ExternalLink class="inline-block size-4" />
-      </a>
-    </nav>
-    <main class="mx-auto w-full max-w-5xl p-4">
-      <section id="hero">
-        <h1>
-          To get started, open the <code><pre>src/pages</pre></code> directory in
-          your project.
-        </h1>
+          記事一覧へ
+          <ArrowRight aria-hidden="true" class="size-4" />
+        </a>
       </section>
     </main>
-    <footer
-      class="flex h-30 items-center justify-center bg-neutral-800 text-white"
-    >
-      &copy; {new Date().getFullYear()} mimoz
-    </footer>
+
+    <Footer />
   </div>
 </Layout>

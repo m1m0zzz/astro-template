@@ -1,0 +1,38 @@
+---
+interface Props {
+  name: string
+  /** プロフィールページなどの URL */
+  link?: string
+  /** アイコン画像の URL（外部 URL のため astro:assets は通さない） */
+  icon?: string
+  class?: string
+}
+
+const { name, link, icon, class: className } = Astro.props
+
+const Tag = link ? "a" : "span"
+const linkProps = link
+  ? { href: link, target: "_blank", rel: "noopener noreferrer author" }
+  : {}
+---
+
+<address class={`not-italic ${className || ""}`}>
+  <Tag
+    {...linkProps}
+    class={`flex items-center gap-2 ${link ? "hover:text-primary" : ""}`}
+  >
+    {
+      icon && (
+        <img
+          src={icon}
+          alt=""
+          width="24"
+          height="24"
+          loading="lazy"
+          class="size-6 rounded-full"
+        />
+      )
+    }
+    <span>{name}</span>
+  </Tag>
+</address>

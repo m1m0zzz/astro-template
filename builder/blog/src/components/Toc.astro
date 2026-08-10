@@ -1,0 +1,93 @@
+---
+import type { MarkdownHeading } from "astro"
+
+import { BLOG } from "@/config"
+
+interface Props {
+  /** `render()` が返す `headings` をそのまま渡す */
+  headings: MarkdownHeading[]
+  class?: string
+}
+
+const { headings, class: className } = Astro.props
+
+const depths: readonly number[] = BLOG.tocDepth
+const items = headings.filter((heading) => depths.includes(heading.depth))
+const minDepth = Math.min(...items.map((item) => item.depth))
+---
+
+{
+  items.length > 0 && (
+    <nav
+      class={`h-fit rounded-lg border border-foreground/10 p-4 text-sm lg:sticky lg:top-20 ${className || ""}`}
+      aria-labelledby="toc-heading"
+    >
+      <h2 id="toc-heading" class="mb-2 font-bold">
+        目次
+      </h2>
+      <ul class="flex flex-col gap-1">
+        {items.map((item) => (
+          <li style={`padding-left: ${(item.depth - minDepth) * 1}rem`}>
+            <a
+              href={`#${item.slug}`}
+              data-toc-link={item.slug}
+              class="block border-l-2 border-transparent py-0.5 pl-2 text-foreground/70 hover:text-primary aria-[current=true]:border-primary aria-[current=true]:text-primary"
+            >
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+<script>
+  const links = new Map<string, HTMLAnchorElement>()
+
+  document
+    .querySelectorAll<HTMLAnchorElement>("[data-toc-link]")
+    .forEach((link) => {
+      const slug = link.dataset.tocLink
+      if (slug) links.set(slug, link)
+    })
+
+  if (links.size > 0) {
+    const visible = new Set<string>()
+    const order = [...links.keys()]
+
+    const setCurrent = (slug: string | null) => {
+      for (const [key, link] of links) {
+        if (key === slug) {
+          link.setAttribute("aria-current", "true")
+        } else {
+          link.removeAttribute("aria-current")
+        }
+      }
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            visible.add(entry.target.id)
+          } else {
+            visible.delete(entry.target.id)
+          }
+        }
+
+        // 画面内にある見出しのうち、いちばん上のものを現在位置とする。
+        // 一つも入っていないときは直前のハイライトを残す。
+        const current = order.find((slug) => visible.has(slug))
+        if (current) setCurrent(current)
+      },
+      // 見出しが画面上部に来たところで切り替わるようにする
+      { rootMargin: "-10% 0px -70% 0px" },
+    )
+
+    for (const slug of links.keys()) {
+      const heading = document.getElementById(slug)
+      if (heading) observer.observe(heading)
+    }
+  }
+</script>

@@ -1,0 +1,71 @@
+---
+import { ChevronLeft, ChevronRight } from "@lucide/astro"
+import type { Page } from "astro"
+
+/**
+ * ページ送り。`paginate()` が返す `page` をそのまま渡す。
+ *
+ * `page.url.prev` などは base を含んだ URL なので `withBase()` は不要。
+ * 番号リンクだけは自前で組み立てるため、base 付きの一覧パスを
+ * `basePath` として受け取る（例: `withBase("posts/")`）。
+ */
+
+interface Props {
+  page: Page<unknown>
+  basePath: string
+  class?: string
+}
+
+const { page, basePath, class: className } = Astro.props
+
+const pages = Array.from({ length: page.lastPage }, (_, i) => i + 1)
+
+const hrefOf = (n: number) => (n === 1 ? basePath : `${basePath}${n}/`)
+
+const itemClass =
+  "flex h-9 min-w-9 items-center justify-center rounded-md border border-foreground/15 px-2 hover:border-primary hover:text-primary"
+---
+
+{
+  page.lastPage > 1 && (
+    <nav
+      class={`flex justify-center gap-2 ${className || ""}`}
+      aria-label="ページ送り"
+    >
+      {page.url.prev ? (
+        <a href={page.url.prev} class={itemClass} aria-label="前のページ">
+          <ChevronLeft aria-hidden="true" class="size-4" />
+        </a>
+      ) : (
+        <span class={`${itemClass} opacity-40`} aria-hidden="true">
+          <ChevronLeft class="size-4" />
+        </span>
+      )}
+
+      {pages.map((n) =>
+        n === page.currentPage ? (
+          <span
+            class={`${itemClass} border-primary text-primary`}
+            aria-current="page"
+          >
+            {n}
+          </span>
+        ) : (
+          <a href={hrefOf(n)} class={itemClass}>
+            {n}
+          </a>
+        ),
+      )}
+
+      {page.url.next ? (
+        <a href={page.url.next} class={itemClass} aria-label="次のページ">
+          <ChevronRight aria-hidden="true" class="size-4" />
+        </a>
+      ) : (
+        <span class={`${itemClass} opacity-40`} aria-hidden="true">
+          <ChevronRight class="size-4" />
+        </span>
+      )}
+    </nav>
+  )
+}

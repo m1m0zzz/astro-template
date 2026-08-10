@@ -1,0 +1,107 @@
+---
+import type { MarkdownHeading } from "astro"
+import { getEntry } from "astro:content"
+
+import AuthorBadge from "@/components/AuthorBadge.astro"
+import CodeCopy from "@/components/CodeCopy.astro"
+import Footer from "@/components/Footer.astro"
+import Header from "@/components/Header.astro"
+import PrevNextNav from "@/components/PrevNextNav.astro"
+import ReadingTime from "@/components/ReadingTime.astro"
+import ShareButtons from "@/components/ShareButtons.astro"
+import TagList from "@/components/TagList.astro"
+import Toc from "@/components/Toc.astro"
+import Layout from "@/layouts/Layout.astro"
+import { formatDate } from "@/lib/date"
+import { withBase } from "@/lib/path"
+import type { Post } from "@/lib/posts"
+
+/**
+ * 記事ページの枠。ToC・読了時間・シェアボタン・前後記事は独立した
+ * コンポーネントなので、不要なものはこのファイルから該当行を消せば外せる。
+ */
+
+interface Props {
+  post: Post
+  headings: MarkdownHeading[]
+  /** 読了時間（分） */
+  readingTime: number
+  prev?: Post
+  next?: Post
+}
+
+const { post, headings, readingTime, prev, next } = Astro.props
+const { title, description, pubDate, updatedDate, tags, draft } = post.data
+
+const author = post.data.author ? await getEntry(post.data.author) : undefined
+
+const url = new URL(Astro.url.pathname, Astro.site)
+const ogImage = new URL(withBase(`og/${post.id}.png`), Astro.site)
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogImage={ogImage}
+  ogType="article"
+>
+  <div class="flex min-h-full flex-col bg-background text-foreground">
+    <Header />
+
+    <main class="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
+      <article>
+        <header class="border-b border-foreground/10 pb-6">
+          <h1 class="text-3xl font-bold sm:text-4xl">{title}</h1>
+
+          <div
+            class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-foreground/60"
+          >
+            <time datetime={pubDate.toISOString()}
+              >{formatDate(pubDate)} 公開</time
+            >
+            {
+              updatedDate && (
+                <time datetime={updatedDate.toISOString()}>
+                  {formatDate(updatedDate)} 更新
+                </time>
+              )
+            }
+            {author && <AuthorBadge {...author.data} />}
+            <ReadingTime minutes={readingTime} />
+            {
+              draft && (
+                <span class="rounded bg-primary/15 px-2 py-0.5 text-primary">
+                  下書き
+                </span>
+              )
+            }
+          </div>
+
+          <TagList tags={tags} class="mt-4" />
+        </header>
+
+        <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_16rem]">
+          {
+            /* 狭い画面では本文の上、lg 以上では右側の sticky サイドバーになる */
+          }
+          <Toc headings={headings} class="lg:order-last" />
+
+          <div
+            class="prose max-w-none prose-neutral dark:prose-invert prose-a:text-primary"
+          >
+            <slot />
+          </div>
+        </div>
+
+        <footer class="mt-12 flex flex-col gap-8">
+          <ShareButtons url={url} title={title} />
+          <PrevNextNav prev={prev} next={next} />
+        </footer>
+      </article>
+    </main>
+
+    <Footer />
+  </div>
+
+  <CodeCopy />
+</Layout>

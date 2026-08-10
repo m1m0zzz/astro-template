@@ -1,0 +1,16 @@
+---
+import { Clock } from "@lucide/astro"
+
+interface Props {
+  /** 分。`getReadingTime()`（src/lib/posts.ts）の戻り値を渡す */
+  minutes: number
+  class?: string
+}
+
+const { minutes, class: className } = Astro.props
+---
+
+<span class={`inline-flex items-center gap-1 ${className || ""}`}>
+  <Clock aria-hidden="true" class="size-4" />
+  約 {minutes} 分で読めます
+</span>

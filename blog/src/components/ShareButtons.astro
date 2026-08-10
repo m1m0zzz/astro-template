@@ -1,0 +1,109 @@
+---
+import { Check, Link } from "@lucide/astro"
+
+/**
+ * SNS シェアボタン。外部 SDK は読み込まず、素のシェア用 URL と
+ * クリップボード API だけで完結させている。
+ */
+
+interface Props {
+  /** シェア対象の絶対 URL */
+  url: URL | string
+  /** シェア文に載せるタイトル */
+  title: string
+  class?: string
+}
+
+const { url, title, class: className } = Astro.props
+
+const href = url.toString()
+const encodedUrl = encodeURIComponent(href)
+const encodedTitle = encodeURIComponent(title)
+
+const links = [
+  {
+    name: "X",
+    href: `https://x.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+  },
+  {
+    name: "はてなブックマーク",
+    href: `https://b.hatena.ne.jp/entry/panel/?url=${encodedUrl}&title=${encodedTitle}`,
+  },
+  {
+    name: "Facebook",
+    href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+  },
+]
+
+const itemClass =
+  "flex size-12 items-center justify-center rounded-full border border-foreground/15 hover:border-primary hover:text-primary"
+---
+
+<div class={`flex items-center gap-2 ${className || ""}`}>
+  {
+    links.map((link) => (
+      <a
+        href={link.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class={itemClass}
+        aria-label={`${link.name} でシェア`}
+        title={`${link.name} でシェア`}
+      >
+        {link.name === "X" && (
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            class="size-4 fill-current"
+          >
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+        )}
+        {link.name === "はてなブックマーク" && (
+          <span class="text-sm font-bold" aria-hidden="true">
+            B!
+          </span>
+        )}
+        {link.name === "Facebook" && (
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            class="size-4 fill-current"
+          >
+            <path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z" />
+          </svg>
+        )}
+      </a>
+    ))
+  }
+  <button
+    type="button"
+    class={`share-copy cursor-pointer ${itemClass}`}
+    data-share-url={href}
+    aria-label="リンクをコピー"
+    title="リンクをコピー"
+  >
+    <Link aria-hidden="true" class="size-4" />
+    <Check aria-hidden="true" class="hidden size-4" />
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>(".share-copy").forEach((btn) => {
+    const [linkIcon, checkIcon] = btn.querySelectorAll("svg")
+
+    btn.addEventListener("click", async () => {
+      const url = btn.dataset.shareUrl
+      if (!url) return
+
+      await navigator.clipboard.writeText(url)
+
+      linkIcon.classList.add("hidden")
+      checkIcon.classList.remove("hidden")
+      setTimeout(() => {
+        linkIcon.classList.remove("hidden")
+        checkIcon.classList.add("hidden")
+      }, 1500)
+    })
+  })
+</script>
