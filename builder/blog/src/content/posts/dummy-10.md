@@ -5,7 +5,6 @@ pubDate: 2026-07-10
 tags:
   - dummy
   - markdown
-author: astronaut
 ---
 
 一覧のページ送りやタグページの見え方を確認するためのダミー記事です。

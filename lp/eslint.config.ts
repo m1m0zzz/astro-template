@@ -21,9 +21,9 @@ export default defineConfig([
         "error",
         {
           groups: [
-            // Node.js builtins and external packages.
+            // Node.js の組み込みモジュールと外部パッケージ
             ["^node:", "^@?\\w"],
-            // Internal alias (@/), then parent/sibling/index relative imports.
+            // エイリアス（@/）、そのあとに親・兄弟・index の相対 import
             [
               "^@/",
               "^\\.\\.(?!/?$)",
@@ -32,9 +32,9 @@ export default defineConfig([
               "^\\.(?!/?$)",
               "^\\./?$",
             ],
-            // Style imports.
+            // スタイルの import
             ["^.+\\.css$"],
-            // Image imports.
+            // 画像の import
             ["^.+\\.(png|jpe?g|gif|svg|webp|avif|ico)$"],
           ],
         },
@@ -52,8 +52,8 @@ export default defineConfig([
     },
   },
   {
-    // Define the configuration for `<script>` tag when using `client-side-ts` processor.
-    // Script in `<script>` is assigned a virtual file name with the `.ts` extension.
+    // `client-side-ts` プロセッサ使用時の `<script>` タグ向けの設定。
+    // `<script>` の中身には `.ts` 拡張子の仮想ファイル名が割り当てられる。
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
       globals: {
@@ -63,8 +63,8 @@ export default defineConfig([
     },
   },
   {
-    // Modules that run in Node during the build: endpoints under src/pages and
-    // the helpers they pull in (OG image generation, font fetching, ...).
+    // ビルド時に Node で動くモジュール。src/pages 以下のエンドポイントと、
+    // そこから読まれるヘルパー（OG 画像の生成、フォントの取得など）。
     files: ["src/lib/**/*.ts", "src/pages/**/*.ts"],
     languageOptions: {
       globals: {

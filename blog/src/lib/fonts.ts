@@ -37,7 +37,6 @@ export interface OgFont {
 
 let fonts: Promise<OgFont[]> | null = null
 
-/** フォントを読み込む。1 回のビルド中は最初の呼び出し結果を使い回す */
 export function loadFonts(): Promise<OgFont[]> {
   fonts ??= Promise.all(FILES.map(loadFont))
   return fonts

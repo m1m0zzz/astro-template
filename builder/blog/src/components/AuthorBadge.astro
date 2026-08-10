@@ -10,7 +10,6 @@ interface Props {
 
 const { name, link, icon, class: className } = Astro.props
 
-// link があればアイコンと名前をまとめてリンクにする
 const Tag = link ? "a" : "span"
 const linkProps = link
   ? { href: link, target: "_blank", rel: "noopener noreferrer author" }

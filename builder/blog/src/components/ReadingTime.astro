@@ -1,13 +1,8 @@
 ---
 import { Clock } from "@lucide/astro"
 
-/**
- * 読了時間。値は remark プラグイン（src/lib/remark-reading-time.mjs）が
- * frontmatter に書き込んだものを渡す。不要なら呼び出し側から削除する。
- */
-
 interface Props {
-  /** 分 */
+  /** 分。`getReadingTime()`（src/lib/posts.ts）の戻り値を渡す */
   minutes: number
   class?: string
 }

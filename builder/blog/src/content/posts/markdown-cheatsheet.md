@@ -6,7 +6,7 @@ updatedDate: 2026-08-07
 tags:
   - markdown
   - tips
-author: astronaut
+author: astro
 ---
 
 この記事はスタイル確認用のサンプルです。見出しが多いので、目次の動きも一緒に確認できます。

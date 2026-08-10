@@ -3,14 +3,8 @@ import type { MarkdownHeading } from "astro"
 
 import { BLOG } from "@/config"
 
-/**
- * 目次。`render()` が返す `headings` をそのまま渡す。
- *
- * 広い画面では記事の横に sticky で貼り付き、狭い画面では本文の上に置かれる。
- * 表示中の見出しに対応する項目を IntersectionObserver でハイライトする。
- */
-
 interface Props {
+  /** `render()` が返す `headings` をそのまま渡す */
   headings: MarkdownHeading[]
   class?: string
 }

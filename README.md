@@ -1,24 +1,25 @@
 # astronaut (astro-template)
 
+[English](./README.en.md)
+
 ## 🧩 Components (ToDo)
 
-Install
+インストール
 
 ```sh
 npm i @m1m0zzz/astronaut
 ```
 
-List of Components
+コンポーネント一覧
 
 - `Carousel`
 - `GoogleAnalytics`
 
-
 ## 🖨️ Templates
 
-use Template
+テンプレートの使い方
 
-1. Run one of the commands below.
+1. 次のいずれかのコマンドを実行する。
 
 ```sh
 npm create astro@latest -- --template m1m0zzz/astro-template/lp
@@ -28,40 +29,40 @@ npm create astro@latest -- --template m1m0zzz/astro-template/lp
 npm create astro@latest -- --template m1m0zzz/astro-template/blog
 ```
 
-2. Open your preferred editor (VSCode is recommended) and replace the string `TODO`.
+2. エディタ（VSCode 推奨）で開き、`TODO` の文字列を置き換える。
 
 ### ✨ Features
 
-Task List is TODO
+タスクリストは TODO
 
 #### Base
 
 - Tailwind CSS
 - AGENTS.md
-- OGP template
-- dark mode (theme toggle)
-- share buttons
+- OGP テンプレート
+- ダークモード（テーマ切り替え）
+- シェアボタン
 - ESLint + Prettier
 - husky + lint-staged
-- VSCode config
-- additional tools and configs: nvm (Node=24), npmrc, editorconfig, cspell, renovate
+- VSCode 設定
+- その他のツール・設定: nvm (Node=24), npmrc, editorconfig, cspell, renovate
 - [ ] ~~astro/sitemap~~
-- [ ] icon convert script
+- [ ] アイコン変換スクリプト
 
-#### [LP](https://github.com/m1m0zzz/astro-template/tree/main/lp) \[[Demo](https://m1m0zzz.github.io/astro-template/lp/)\]
+#### [LP](./lp) \[[Demo](https://m1m0zzz.github.io/astro-template/lp/)\]
 
-- [ ] Font Optimizer
-- [ ] Carousel Component (use `Embla Carousel`)
+- [ ] フォント最適化
+- [ ] カルーセルコンポーネント（`Embla Carousel` を使用）
 
-#### [Blog](https://github.com/m1m0zzz/astro-template/tree/main/blog/)  \[[Demo](https://m1m0zzz.github.io/astro-template/blog/)\]
+#### [Blog](./blog/) \[[Demo](https://m1m0zzz.github.io/astro-template/blog/)\]
 
 - astro/sitemap
-- Content Collections (posts + authors)
-- Blog Layout
-  - blog css (`@tailwindcss/typography`)
-  - ToC (Table of Content) Component
-- list page (pagination, tag pages, RSS)
-- author frontmatter (name,link,icon)
-- Dynamic OG Images (satori + resvg, generated at build time)
-- reading time / share buttons / prev-next links
-- dark mode toggle
+- Content Collections（posts + authors）
+- ブログ用レイアウト
+  - 本文のスタイル（`@tailwindcss/typography`）
+  - 目次（ToC）コンポーネント
+- 一覧ページ（ページネーション・タグページ・RSS）
+- author の frontmatter（name / link / icon）
+- OG 画像の動的生成（satori + resvg、ビルド時に生成）
+- 読了時間 / シェアボタン / 前後記事リンク
+- ダークモードの切り替え

@@ -22,7 +22,6 @@ const COLORS = {
   primary: "#f9881e",
 }
 
-/** 画像に収まる長さにタイトルを丸める */
 const MAX_TITLE_LENGTH = 70
 
 interface OgImageOptions {
@@ -54,7 +53,6 @@ function template({ title, subtitle }: OgImageOptions): OgNode {
       height: "100%",
       padding: "72px",
       backgroundColor: COLORS.background,
-      // 上端のアクセントライン
       borderTop: `16px solid ${COLORS.primary}`,
       fontFamily: "Noto Sans JP",
     },

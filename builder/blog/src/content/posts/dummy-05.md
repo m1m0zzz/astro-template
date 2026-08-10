@@ -5,7 +5,6 @@ pubDate: 2026-07-05
 tags:
   - dummy
   - tips
-author: mimoz
 ---
 
 一覧のページ送りやタグページの見え方を確認するためのダミー記事です。

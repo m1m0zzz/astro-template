@@ -10,7 +10,6 @@ export const SITE = {
   description: "SITE DESCRIPTION", // TODO
   /** Twitter Card の `twitter:site`。不要なら空文字にする */
   twitterID: "@xxxxxx", // TODO
-  /** `<html lang>` に入る言語コード */
   lang: "ja",
   /** `og:locale`。`Intl` 用のロケールもこの値から作る */
   locale: "ja_JP",

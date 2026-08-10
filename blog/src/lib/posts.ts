@@ -36,7 +36,6 @@ export function getAllTags(posts: Post[]): { tag: string; count: number }[] {
     .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag))
 }
 
-/** 指定タグの記事だけを抜き出す */
 export function filterByTag(posts: Post[], tag: string): Post[] {
   return posts.filter((post) => post.data.tags.includes(tag))
 }

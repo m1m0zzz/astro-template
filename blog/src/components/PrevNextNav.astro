@@ -4,10 +4,6 @@ import { ArrowLeft, ArrowRight } from "@lucide/astro"
 import { withBase } from "@/lib/path"
 import type { Post } from "@/lib/posts"
 
-/**
- * 前後の記事へのリンク。不要なら呼び出し側から削除する。
- */
-
 interface Props {
   /** 1 つ古い記事 */
   prev?: Post
@@ -22,12 +18,6 @@ const itemClass =
   "flex flex-col gap-1 rounded-lg border border-foreground/15 p-4 hover:border-primary"
 ---
 
-{
-  /*
-   * 2 カラムのグリッド。片方しか無くても列幅は変わらないので、
-   * 「次の記事」だけのときも右半分に収まる（狭い画面では 1 カラムで全幅）。
-   */
-}
 {
   (prev || next) && (
     <nav

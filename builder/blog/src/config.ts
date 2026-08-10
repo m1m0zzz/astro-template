@@ -10,17 +10,13 @@ export const SITE = {
   description: "SITE DESCRIPTION", // TODO
   /** Twitter Card の `twitter:site`。不要なら空文字にする */
   twitterID: "@xxxxxx", // TODO
-  /** `<html lang>` に入る言語コード */
   lang: "ja",
   /** `og:locale`。`Intl` 用のロケールもこの値から作る */
   locale: "ja_JP",
 } as const
 
-/** ブログ固有の設定 */
 export const BLOG = {
-  /** 一覧ページ 1 ページあたりの記事数 */
   postsPerPage: 10,
-  /** トップページに並べる最新記事の件数 */
   recentPostsOnTop: 5,
   /** 目次に載せる見出しレベル */
   tocDepth: [2, 3],

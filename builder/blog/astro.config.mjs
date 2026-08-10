@@ -7,8 +7,9 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     resolve: {
-      // Required when Vite 8 is hoisted: @tailwindcss/vite spreads this object into
-      // createResolver() and Vite 8 rejects resolve options without `tsconfigPaths`.
+      // Vite 8 が巻き上げられたときに必要。@tailwindcss/vite はこのオブジェクトを
+      // createResolver() に展開するが、Vite 8 は `tsconfigPaths` の無い resolve を
+      // 受け付けない。
       tsconfigPaths: true,
     },
   },
@@ -26,7 +27,7 @@ export default defineConfig({
     },
   },
 
-  // TODO: Update these to your site's URL.
+  // TODO: 自分のサイトの URL に書き換える。
   //
   // このテンプレート自身は GitHub Pages のプロジェクトサイトとして
   // https://m1m0zzz.github.io/astro-template/blog/ に配信されている。
