@@ -1,0 +1,56 @@
+---
+import type { Placement } from "@floating-ui/dom"
+
+/**
+ * ツールチップ。位置決めは [@floating-ui/dom](https://floating-ui.com/) に任せる。
+ *
+ * slot に渡した最初の要素が基準になる。ラッパー自体は `display: contents` なので
+ * レイアウトには影響しない。
+ *
+ * ```astro
+ * <Tooltip text="コードをコピー" placement="left">
+ *   <button type="button">...</button>
+ * </Tooltip>
+ * ```
+ *
+ * `trigger="manual"` にすると hover / focus では出ず、`TooltipElement` の
+ * `show()` / `hide()` を呼んだときだけ表示する。
+ */
+
+interface Props {
+  /** ツールチップに表示するテキスト */
+  text: string
+  /** 基準要素に対する表示位置 */
+  placement?: Placement
+  /** 表示のきっかけ */
+  trigger?: "hover" | "manual"
+  class?: string
+}
+
+const {
+  text,
+  placement = "top",
+  trigger = "hover",
+  class: className,
+} = Astro.props
+---
+
+<ui-tooltip
+  class:list={["contents", className]}
+  data-placement={placement}
+  data-trigger={trigger}
+>
+  <slot />
+  <span
+    data-tooltip-content
+    role="tooltip"
+    aria-live="polite"
+    class="pointer-events-none fixed top-0 left-0 z-50 hidden w-max max-w-60 rounded bg-white px-2 py-1 text-xs shadow-md dark:text-neutral-50"
+    >{text}</span
+  >
+</ui-tooltip>
+
+<script>
+  // customElements.define の副作用で <ui-tooltip> が使えるようになる
+  import "@/lib/tooltip"
+</script>

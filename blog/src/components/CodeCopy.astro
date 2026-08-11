@@ -1,29 +1,66 @@
 ---
-/** ボタンの見た目は global.css の `.code-copy` 側にある */
+import { Clipboard, ClipboardCheck } from "@lucide/astro"
+
+import Tooltip from "@/components/Tooltip.astro"
 ---
 
+<div id="code-copy-source" hidden>
+  <Tooltip text="コードをコピー" placement="left">
+    <button type="button" class="code-copy" aria-label="コードをコピー">
+      <Clipboard aria-hidden="true" class="size-4" />
+      <ClipboardCheck aria-hidden="true" class="hidden size-4" />
+    </button>
+  </Tooltip>
+</div>
+
 <script>
-  const LABEL = "Copy"
-  const COPIED = "Copied!"
+  /*
+   * 上の #code-copy-source はコピーボタンの雛形で、ここで pre ごとに複製する。
+   * <template> ではなく hidden な div なのは、Tooltip.astro の script が
+   * その位置に出力されるため（<template> の中の script は実行されない）。
+   */
+  import { TooltipElement } from "@/lib/tooltip"
+
+  const LABEL = "コードをコピー"
+  const COPIED = "コピーしました"
+  const DURATION = 2000
+
+  const source = document.querySelector("#code-copy-source > ui-tooltip")
 
   document.querySelectorAll<HTMLPreElement>("pre.astro-code").forEach((pre) => {
-    const button = document.createElement("button")
-    button.type = "button"
-    button.className = "code-copy"
-    button.textContent = LABEL
-    button.setAttribute("aria-label", "コードをコピー")
+    if (!source) return
+
+    const tooltip = pre.appendChild(source.cloneNode(true))
+    if (!(tooltip instanceof TooltipElement)) return
+
+    const button = tooltip.querySelector("button")
+    if (!button) return
+
+    const [copyIcon, copiedIcon] = button.querySelectorAll("svg")
+    let timer: number | undefined
 
     button.addEventListener("click", async () => {
-      await navigator.clipboard.writeText(
-        pre.querySelector("code")?.textContent ?? "",
-      )
+      try {
+        await navigator.clipboard.writeText(
+          pre.querySelector("code")?.textContent ?? "",
+        )
+      } catch {
+        return
+      }
 
-      button.textContent = COPIED
-      setTimeout(() => {
-        button.textContent = LABEL
-      }, 1500)
+      copyIcon.classList.add("hidden")
+      copiedIcon.classList.remove("hidden")
+      tooltip.text = COPIED
+      tooltip.show()
+
+      clearTimeout(timer)
+      timer = window.setTimeout(() => {
+        copyIcon.classList.remove("hidden")
+        copiedIcon.classList.add("hidden")
+        tooltip.text = LABEL
+        // ポインタが乗ったままなら、元のテキストで出しておく
+        if (!tooltip.hovered) tooltip.hide()
+      }, DURATION)
     })
-
-    pre.appendChild(button)
   })
 </script>
