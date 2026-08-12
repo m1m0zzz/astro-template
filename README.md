@@ -2,18 +2,7 @@
 
 [English](./README.en.md)
 
-## 🧩 Components (ToDo)
-
-インストール
-
-```sh
-npm i @m1m0zzz/astronaut
-```
-
-コンポーネント一覧
-
-- `Carousel`
-- `GoogleAnalytics`
+Demo: [LP](https://m1m0zzz.github.io/astro-template/lp/) |  [Blog](https://m1m0zzz.github.io/astro-template/blog/)
 
 ## 🖨️ Templates
 
@@ -66,3 +55,16 @@ npm create astro@latest -- --template m1m0zzz/astro-template/blog
 - OG 画像の動的生成（satori + resvg、ビルド時に生成）
 - 読了時間 / シェアボタン / 前後記事リンク
 - ダークモードの切り替え
+
+## 🧩 Components (ToDo)
+
+インストール
+
+```sh
+npm i @m1m0zzz/astronaut
+```
+
+コンポーネント一覧
+
+- [ ] `Carousel`
+- `GoogleAnalytics`
