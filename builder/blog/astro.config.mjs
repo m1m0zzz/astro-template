@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url"
 import sitemap from "@astrojs/sitemap"
 import tailwindcss from "@tailwindcss/vite"
 import { defineConfig } from "astro/config"
@@ -11,6 +12,12 @@ export default defineConfig({
       // createResolver() に展開するが、Vite 8 は `tsconfigPaths` の無い resolve を
       // 受け付けない。
       tsconfigPaths: true,
+      alias: {
+        // tsconfig.json を solution 形式（references だけ）にしたため、ここから
+        // paths を辿れなくなった。ビルド側の解決はこの alias で明示する。
+        // 型側は tsconfig.app.json の paths。両方を揃えること
+        "@": fileURLToPath(new URL("./src", import.meta.url)),
+      },
     },
   },
   integrations: [sitemap()],

@@ -15,6 +15,7 @@ npm run format       # Prettier（--write）
 npm run format:check # フォーマット崩れの検出
 npm run typecheck    # 型検査のみ。build から呼ばれる
 npm run favicon      # public/favicon.svg から favicon.ico と apple-touch-icon.png を作る
+npm run debug:page   # ページを実際に開いて状態とスクリーンショットを取る
 ```
 
 `check` はファイルを書き換えない。CI と、変更したあとの確認にはこれを使う。
@@ -35,6 +36,12 @@ npm run favicon      # public/favicon.svg から favicon.ico と apple-touch-ico
 
 フロントマター（`---` の中）のコメントはJSのコメントなので元から出力されない。
 出力に残る `<!--astro:end-->` はislandの範囲を示すAstroの内部マーカーで、これは消せない。
+
+### ビルド時にだけ動くコードは `src/lib/server/` に置く
+
+`src/lib/` 直下はブラウザでも動くコードとして扱い、ESLintもNode専用のグローバル
+（`process` など）を認めない。フォントの取得やOG画像の生成のようにNodeでしか動かない
+ヘルパーは `src/lib/server/` に置くこと。
 
 ## タスク完了チェックリスト
 

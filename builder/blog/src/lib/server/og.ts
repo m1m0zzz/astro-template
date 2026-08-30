@@ -2,7 +2,7 @@ import { Resvg } from "@resvg/resvg-js"
 import satori from "satori"
 
 import { SITE } from "@/config"
-import { loadFonts } from "@/lib/fonts"
+import { loadFonts } from "@/lib/server/fonts"
 
 /**
  * OG 画像（1200×630 の PNG）をビルド時に生成する。

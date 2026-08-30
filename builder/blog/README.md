@@ -66,7 +66,7 @@ jsDelivr から取得）をダウンロードして `node_modules/.cache/og-font
 するため、そのビルドにはネットワークが必要です。取得に失敗した場合は、OG 画像が
 欠けたまま公開されないようビルドを停止します。
 
-デザインを変えるときは `src/lib/og.ts` の `template()` を編集してください。
+デザインを変えるときは `src/lib/server/og.ts` の `template()` を編集してください。
 
 ## 🧩 外せるパーツ
 

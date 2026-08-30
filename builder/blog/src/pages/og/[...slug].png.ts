@@ -2,8 +2,8 @@ import type { APIRoute, GetStaticPaths } from "astro"
 import { getEntry } from "astro:content"
 
 import { SITE } from "@/config"
-import { renderOgImage } from "@/lib/og"
 import { getPosts } from "@/lib/posts"
+import { renderOgImage } from "@/lib/server/og"
 
 /**
  * OG 画像をビルド時に生成する。

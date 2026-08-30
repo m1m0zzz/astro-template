@@ -74,9 +74,18 @@ export default defineConfig([
     },
   },
   {
-    // ビルド時に Node で動くモジュール。src/pages 以下のエンドポイントと、
-    // そこから読まれるヘルパー（OG 画像の生成、フォントの取得など）。
-    files: ["src/lib/**/*.ts", "src/pages/**/*.ts", "scripts/**/*.ts"],
+    // Node で動くモジュール。ビルド時のもの（Astro の設定、単発のスクリプト、
+    // src/pages 以下のエンドポイントと、そこから読まれるヘルパー）。
+    //
+    // src/lib 直下はブラウザでも動くコードなので含めない。含めると Node 専用の
+    // グローバル（process など）を誤って使っても lint で気づけない。
+    // ビルド時にしか動かないヘルパーは src/lib/server/ に置くこと
+    files: [
+      "astro.config.mjs",
+      "scripts/**/*.ts",
+      "src/pages/**/*.ts",
+      "src/lib/server/**/*.ts",
+    ],
     languageOptions: {
       globals: {
         ...globals.node,

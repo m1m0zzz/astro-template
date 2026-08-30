@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# debug-page.ts が撮ったスクリーンショットと状態のダンプ
+/tmp/

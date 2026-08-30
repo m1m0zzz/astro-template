@@ -15,8 +15,11 @@
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "debug:page": "tsx scripts/debug-page.ts",
     "favicon": "tsx scripts/generate-favicon.ts",
-    "typecheck": "astro check",
+    "typecheck": "npm run typecheck:app && npm run typecheck:node",
+    "typecheck:app": "astro check --tsconfig tsconfig.app.json",
+    "typecheck:node": "tsc -b tsconfig.node.json",
     "check": "npm run lint && npm run format:check",
     "prepare": "husky"
   },
@@ -30,6 +33,7 @@
     "typescript": "^6.0.0"
   },
   "devDependencies": {
+    "@types/node": "26.3.0",
     "@typescript-eslint/parser": "8.68.0",
     "eslint": "9.39.5",
     "eslint-config-prettier": "10.1.8",
@@ -38,6 +42,7 @@
     "eslint-plugin-simple-import-sort": "14.0.0",
     "husky": "9.1.7",
     "lint-staged": "17.3.0",
+    "playwright": "1.62.1",
     "prettier": "3.9.6",
     "prettier-plugin-astro": "0.14.1",
     "prettier-plugin-tailwindcss": "0.8.1",

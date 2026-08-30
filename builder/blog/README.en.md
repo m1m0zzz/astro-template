@@ -67,7 +67,7 @@ fontsource via jsDelivr) and caches it under `node_modules/.cache/og-fonts/`, so
 that build needs network access. If the download fails the build stops rather
 than shipping pages without OG images.
 
-To change the design, edit `template()` in `src/lib/og.ts`.
+To change the design, edit `template()` in `src/lib/server/og.ts`.
 
 ## 🧩 Optional pieces
 
