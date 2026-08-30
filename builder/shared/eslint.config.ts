@@ -6,6 +6,8 @@ import eslintPluginAstro from "eslint-plugin-astro"
 import eslintPluginSimpleImportSort from "eslint-plugin-simple-import-sort"
 import globals from "globals"
 
+import noHtmlComment from "./eslint-rules/no-html-comment"
+
 export default defineConfig([
   globalIgnores([".astro", "dist"]),
   js.configs.recommended,
@@ -15,6 +17,13 @@ export default defineConfig([
   {
     plugins: {
       "simple-import-sort": eslintPluginSimpleImportSort,
+      // npm に出す予定の無いリポジトリ内のルール。公開パッケージと名前が
+      // ぶつからないよう local という名前にしている
+      local: {
+        rules: {
+          "no-html-comment": noHtmlComment,
+        },
+      },
     },
     rules: {
       "simple-import-sort/imports": [
@@ -40,6 +49,7 @@ export default defineConfig([
         },
       ],
       "simple-import-sort/exports": "error",
+      "local/no-html-comment": "error",
     },
   },
   {
@@ -47,6 +57,7 @@ export default defineConfig([
     languageOptions: {
       globals: {
         ...globals.browser,
+        // gtag.js の dataLayer
         dataLayer: false,
       },
     },
@@ -65,7 +76,7 @@ export default defineConfig([
   {
     // ビルド時に Node で動くモジュール。src/pages 以下のエンドポイントと、
     // そこから読まれるヘルパー（OG 画像の生成、フォントの取得など）。
-    files: ["src/lib/**/*.ts", "src/pages/**/*.ts"],
+    files: ["src/lib/**/*.ts", "src/pages/**/*.ts", "scripts/**/*.ts"],
     languageOptions: {
       globals: {
         ...globals.node,

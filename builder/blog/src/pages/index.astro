@@ -26,9 +26,10 @@ const ogImage = new URL(withBase("og/default.png"), Astro.site)
     <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
       <section>
         <h1 class="text-4xl font-bold">{SITE.name}</h1>
-        <!-- <p class="mt-3 text-foreground/70">{SITE.description}</p> -->
+        {/* <p class="mt-3 text-foreground/70">{SITE.description}</p> */}
 
-        <!-- <ul class="mt-5 flex flex-wrap gap-2">
+        {
+          /* <ul class="mt-5 flex flex-wrap gap-2">
           {
             tags.map(({ tag }) => (
               <li>
@@ -41,7 +42,8 @@ const ogImage = new URL(withBase("og/default.png"), Astro.site)
               </li>
             ))
           }
-        </ul> -->
+        </ul> */
+        }
       </section>
 
       <section class="mt-12">

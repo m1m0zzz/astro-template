@@ -41,11 +41,11 @@ const ogUrl = new URL(Astro.url.pathname, Astro.site)
     <link rel="sitemap" href={withBase("sitemap-index.xml")} />
     <link rel="icon" href={withBase("favicon.ico")} sizes="32x32" />
     <link rel="icon" href={withBase("favicon.svg")} type="image/svg+xml" />
-    <!-- <link
+    <link
       rel="apple-touch-icon"
       href={withBase("apple-touch-icon.png")}
       sizes="180x180"
-    /> -->
+    />
     {noIndex && <meta name="robots" content="noindex" />}
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -55,7 +55,7 @@ const ogUrl = new URL(Astro.url.pathname, Astro.site)
       rel="stylesheet"
     />
 
-    <!-- TODO: ID を設定する。Google Analytics が不要なら下の行ごと削除する。 -->
+    {/* TODO: ID を設定する。Google Analytics が不要なら下の行ごと削除する。 */}
     <GoogleAnalytics id="G-XXXXXXXXXX" />
 
     <meta name="description" content={description} />
