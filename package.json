@@ -31,8 +31,8 @@
   "devDependencies": {
     "concurrently": "10.0.7",
     "husky": "9.1.7",
-    "marked": "18.2.0",
-    "serve": "14.2.7"
+    "marked": "18.2.1",
+    "serve": "14.2.8"
   },
   "allowScripts": {
     "esbuild": true,
